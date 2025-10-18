@@ -1,0 +1,5 @@
+
+html { background-color: grey; padding: 0; }
+body { margin: auto; margin-top:0px; padding: 1em; max-width: 800px; background-color: white; }
+p    { text-align: justify; hyphens: auto; }
+a    { color: color-mix(in srgb, currentColor 40%, #0000FF 60%); text-decoration-color: rgba(0, 0, 0, 0.1); }
