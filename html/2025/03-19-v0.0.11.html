@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Транслятор 0.0.11</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Транслятор 0.0.11</h2>
+
+<p lang='ru'>
+  Выпущено <a href="https://github.com/Vostok-space/vostok/releases/tag/lib-v0.0.10_ost-v0.0.11">обновление</a>
+  с поправками и усилением транслятора в версии 0.0.11 и исправлением и расширением библиотеки по умолчанию в версии 0.0.10.
+  Помимо <a href="https://wiki.oberon.org/repo">deb-пакета</a>, 
+  <a href="https://snapcraft.io/vostok">snap</a> и 
+  <a href="https://github.com/Vostok-space/homebrew-oberon">homebrew</a>
+  доступна также <a href="https://www.npmjs.com/package/vostok-oberon">установка через npm</a>
+  версии, работающей через JavaScript.
+</p>
+
+<!--more-->
+
+<ul>
+  <li>Генерация в C операций из <a href="../../2023/11/checked-system.html">SYSTEM с проверкой границ</a>
+  <li>Воплощена генерация многомерных массивов записей в Java и JavaScript
+  <!--li>Поддержка <a href="../../2023/04/procedure.html">процедур верхнего уровня</a-->
+  <li>Проверка простейших случаев безусловной рекурсии, трактуемой как ошибка
+  <li>Проверка переполнения в ASL, LSL, ROR во время трансляции и в исполняемом коде C
+  <li>Улучшена генерация ASR в Java и JavaScript
+  <li>Добавлено .exe к имени генерируемого исполняемого файла при выполнении в WinApi
+  <li>Транслитерация с кириллицы на английский приведена ближе к ISO 9-95
+  <li>Ограничение — в кириллических именах буквы ь, ъ принимаются только после согласных
+  <li>При трансляции промежуточного Java-кода явно установливается кодировка входных данных компилятора Java в UTF-8 для предотвращения возможного искажения смысла Java-кода
+  <li>Исправлено вычисление константного значения кода вида FALSE OR TRUE, а также сравнений строк
+  <li>Исправлена генерация в C значений множителей, используемых как подвыражения в термах
+  <li>Исправлена генерация в C ORD (от константы)
+  <li>Исправлена возможность использования цифр в кириллических именах
+  <li>Исправлена генерация _undef в C для предотвращения неопределенного поведения при использовании с clang
+  <li>Исправлен сбой при генерации в C SYSTEM.SIZE с типом массива
+  <li>Исправлена генерация в C экспортируемых элементов не экспортируемых записей
+  <li>Исправлено редкое появление управляющего символа в значении строк длиной в один символ
+</ul>
+
+<div><h3>В библиотеке:</h3>
+<ul>
+  <li>Добавлены CheckIntArithmetic.MulPow2, CFiles.Rename, VDataStream.Skip, log.q,
+JsSelfExe, WindowsDir.Mkdir, PosixDir.Mkdir, PosixFileMode, JsString,
+JsDir, JavaString, JavaPath, JavaDir, Utf8.Char (тип), CalcSet, AdDraw, модули OldCharsetWindows1251(|ToUnicode|ToUtf8) для преобразования из кодировки Windows-1251
+  <li>Поправлен код поддержки процедур SYSTEM в C для возможности осуществления проверок границ
+  <li>Поддержка проверки переполнения в ASL, LSL, ROR в C
+  <li>Включены встроенные функции для проверяемой арифметики в clang
+  <li>Переименован Chars0X в Charz
+  <li>Улучшена проверка неинициализированных переменных в JavaScript
+  <li>Улучшена совместимость с bun — средой выполнения JS
+  <li>Исправлено использование Wlibloaderapi.GetModuleFileNameA с tcc
+  <li>Исправлены типы параметров функций среды выполнения C — улучшена переносимость
+  <li>Исправлена Math.exp в JavaScript
+  <li>Исправлен CFiles.Exist в C при открытии файла для чтения, если он не существует
+  <li>Исправлена обработка параметров с кавычками в OsExec через Java
+  <li>Исправлена поддержка Big Endian в C
+</ul>    
+</div>
+
+</body>
+</html>
