@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Переполнение в JavaScript</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Проверка арифметического переполнения и инициализированности  в JavaScript</h2>
+<p>Поправил до уровня работоспособности генерацию кода JavaScript для проверки
+<a href='https://github.com/Vostok-space/vostok/commit/5196e44a508eb3cc87c84c2e2aa6f086122f141c'>
+  арифметических ошибок</a>
+и 
+<a href="https://github.com/Vostok-space/vostok/commit/5400dd38baa2f184cd658df4085c8d0d2d6df7d0">
+  состояния инициализированности переменных</a>.
+  
+Генерация проверок включается и выключается отдельно для каждого вида, но они не являются полностью независимыми, так как проверка арифметики может быть выполнена заодно с инициализированностью.
+</p>
+
+<p>Например:</p>
+<pre>r = a * b;
+if (-0x80000000 &lt; r &amp;&amp; r &lt; 0x80000000) {
+...
+</pre>
+<p>Проверяемое условие не будет выполнено как в случае выхода за границы, так и в случае, если переменные будут заданы как NaN в качестве неиницилизированности, что позже может быть дополнительно проверено.</p>
+
+</body>
+</html>

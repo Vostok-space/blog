@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Переполнение в JavaScript</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Проверка границ массива в JavaScript</h2>
+<p>
+<a href="https://github.com/Vostok-space/vostok/commit/8d4c4016aa5d5216db246cf592e8e8d57086f7f2">Добавил</a>
+проверку индекса на выход за границы массива для кода, сгенерированного в JavaScript, что было 
+<a href="../../2019/01/javascript.html">анонсировано</a> почти 2-а года назад. Применённая модель проверки, естественно, замедляет выполнение, но всё же не приводит к взрывной деградации скорости в современных браузерах и в node.js, как это бывает с исполнителями JavaScript.
+</p>
+
+<p>
+ Был применён такой подход:</p>
+<pre>array = new Array(len);
+this.at = function(index) {
+  if (0 &lt;= index &amp;&amp; index &lt; len) {
+    return array[index];
+  } else {
+    throw new RangeError();
+  }
+};
+
+..
+
+a = arr.at(i);
+</pre>
+<p>len находится в контексте объемлющей функции и не меняется после установления, что позволяет jit-компилятору оптимизировать проверки вплоть до сравнения с константами, что может быть очень эффективным. Впрочем, накладные расходы на методы никуда не деваются, а Object.freeze для обеспечения гарантии отсутствия подмены методов и гипотетической возможности их встраивания не помог для оптимизации.
+</p>
+</body>
+</html>

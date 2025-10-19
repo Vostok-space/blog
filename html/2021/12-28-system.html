@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SYSTEM</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Псевдомодуль SYSTEM</h2>
+<figure style="float: right;padding:0;margin:0;">
+
+  <div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_uFf2XN8pBZKIA_t_nDGWdOcPw6_xi_enn9OmlXUvoY_FfLP1-DN0GB4DXDzfVZUQ85WI36FQb6Uth_J6xtE-vqme7-r5cAqCcnGHDbtWgEUBY1hrd9Hp1dHhVZGvvFTOrHGo2KoU-mrjTPO4eCbjC6xQ88YUmZg8n1H0F6YE3xRrUn8MnOAOu_vZAGY/s1024/DALL%C2%B7E%202023-11-20%2012.16.21%20-%20A%20completely%20glass%20cabinet%20filled%20with%20books,%20being%20shattered%20by%20a%20sledgehammer.%20This%20image%20captures%20the%20intense%20moment%20of%20impact,%20with%20the%20glass%20cabi.png" style="display: block; padding: 0; text-align: center; "><img alt="" border="0" width="400" data-original-height="1024" data-original-width="1024" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg_uFf2XN8pBZKIA_t_nDGWdOcPw6_xi_enn9OmlXUvoY_FfLP1-DN0GB4DXDzfVZUQ85WI36FQb6Uth_J6xtE-vqme7-r5cAqCcnGHDbtWgEUBY1hrd9Hp1dHhVZGvvFTOrHGo2KoU-mrjTPO4eCbjC6xQ88YUmZg8n1H0F6YE3xRrUn8MnOAOu_vZAGY/s400/DALL%C2%B7E%202023-11-20%2012.16.21%20-%20A%20completely%20glass%20cabinet%20filled%20with%20books,%20being%20shattered%20by%20a%20sledgehammer.%20This%20image%20captures%20the%20intense%20moment%20of%20impact,%20with%20the%20glass%20cabi.png"/></a></div>
+  <figcapture>Последствия неправильного применения SYSTEM могут быть<br/> плохо предсказуемыми</figcapture>
+</figure>
+<p>
+ Частично 
+ <a href="https://github.com/Vostok-space/vostok/commit/fbc4f935ddd2b61a8f930ac178c09661e7d753a7">воплощена</a>
+ работа с опциональным псевдомодулем SYSTEM для низкоуровневой работы с памятью.
+ Поддержаны основные процедуры - ADR, SIZE, BIT, GET, PUT, COPY.
+ На данном этапе возвращаемый адрес помещается в INTEGER с контролем возможного переполнения, поэтому
+ нормально работает это только в 32-битных системах. По умолчанию псевдомодуль недоступен, но включается
+ при указании транслятору ключа -allow-system. В Java и JavaScript ADR выдаёт бессмысленный результат,
+ а любая попытка чтения или записи памяти заканчивается аварийно.
+</p>
+
+<div style='height:4em;'></div>
+
+</body>
+</html>

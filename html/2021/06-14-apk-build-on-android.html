@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Сборка APK</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Сборка APK на Android-устройстве</h2>
+<div>
+
+<style>
+  pre {
+    background-color: #F0F0F0;
+  }
+</style>
+  
+<p>
+  Недавно в меру потребности стал использовать 
+  <a href="https://termux.com/">Termux</a> - 
+  эмулятор терминала для Android с очень богатыми возможностями. Для него поддерживаются репозитории
+  с множеством специализированных deb-пакетов с возможностью установки, аналогичной дистрибутивам GNU/Linux.
+  Средства разработки представлены достаточно широко, поэтому появилось закономерное желание проверить 
+  работоспособность транслятора Восток в таком не совсем обычном окружении.
+</p>
+
+<!--more-->
+
+<p>
+  Основная часть функционала заработала сразу. Трансляция в высокоуровневые языки, естественно,
+  работает прекрасно, но кроме того сразу заработали сборка и запуск двоичного кода через C, а также запуск
+  JavaScript кода. Сборка JVM-байткода осуществляется через ecj от проекта Eclipse, что требует дополнительных 
+  параметров транслятору Восток. А вот запустить такой код сложней, так как требуется либо установка JRE из
+  сторонних источников, либо предварительное преобразование в родной для Android dex-формат, что не было 
+  предусмотрено в Востоке.
+</p>
+
+<p>
+  Из мелких проблем можно отметить недоступность каталога <code>/tmp/</code>, что привело к 
+  <a href="https://github.com/Vostok-space/vostok/commit/e1a54aef39b281622d1a6cb7e85555a01ad21266">обобщению</a> 
+  для работы с каталогом для временных файлов
+</p>
+  
+<p>
+  Но наибольший интерес представляет возможность сборки APK приложений - наиболее естественный исполняемый формат
+  на Android. Оригинальная SDK ужасно раздута, но как выяснилось, минимальный набор инструментов для сборки
+  APK не так велик и уже перенесён в виде deb-пакетов на Termux. Оставалось только корректно задействовать
+  их в Востоке, что и было проделано:
+
+  <iframe id="odysee-iframe" width="420" height="960" src="https://odysee.com/$/embed/Screen_Recording_20210613-213356_Termux/a575900a182edff552472ff5647d0ddab565eb5c?r=E79nzWoVG97v4p5U7yPfQA6k1kFs83PB" allowfullscreen></iframe>
+  <details><summary>youtube</summary>
+  <iframe width="420" height="960" src="https://youtube.com/embed/qYMs8Qt-tgU" frameborder="0"></iframe>
+  </details>
+</p>
+
+<p>
+  Для сборки и корректной работы сборщика Android приложений Востока в среде Termux
+  требуется выполнить несколько команд:
+  <pre><code>apt install git clang ecj dx aapt apksigner
+
+git clone --depth 1 https://github.com/vostok-space/vostok.git
+cd vostok
+./init.sh
+result/bs-ost run make.Build -infr . -m source
+
+mkdir -p $HOME/.android
+cp test/debug-key/key.pk8 $HOME/.android/debug-key.pk8
+cp test/debug-key/cert.pem $HOME/.android/debug-cert.pem
+
+result/ost to-bin '
+AndroidBuild.SetKeyDefault("'$HOME'/.android/debug-key.pk8", "'$HOME'/.android/debug-cert.pem");
+AndroidBuild.SetSdkDefault("");
+AndroidBuild.SetBaseClassPathDefault("'$PREFIX'/share/java/android-24.jar");
+AndroidBuild.SetJavacDefault("ecj -nowarn");
+AndroidBuild.Go' \
+result/osa -m source/blankC -m source/blankJs -m source/blankOberon -infr . -m source</code></pre>
+
+  Вместе с самим Termux дополнительные пакеты занимают около половины гигабайта на устройстве.
+  Половину этого места занимает clang, который был нужен для компиляции сборщика, но не для
+  его дальнейшей работы, поэтому в случае потребности может быть удалён:
+<pre><code>apt remove --autoremove clang</code></pre>
+</p>
+
+<p>Сборка и запуск примера:</p>
+<pre><code>result/osa open Rocket.Fly -activity Rocket -infr . -m example/android</code></pre>
+
+<p>
+  Сборка работает как на новых Android-устройствах, так и на изрядно устаревших, к примеру, всё было
+  протестировано в том числе на 
+  Samsung Galaxy S4 mini(2013, 1.5 GiB ОЗУ). Но нужно учитывать, что Termux поддерживается начиная с
+  7-го Android, поэтому для таких устройств необходимы сторонние прошивки, так как производители
+  обычно не заморачиваются с длительной поддержкой.
+</p>
+
+<p>
+  Сборщик APK-приложений на Android может быть удобен для тех, кто не использует GNU/Linux
+  и хочет избежать настройки сборочного окружения на Windows, что может быть вполне приемлемым
+  для небольших доделок. А на планшетах или телефонах в режиме DEX может служить частью
+  полноценной системы разработчиков, которые не любят тяжеловесные IDE. Экзотических случаев,
+  вроде <a href="https://xakep.ru/2013/10/19/61451/">бомжей-разработчиков</a> тоже нельзя исключать.
+</p>
+
+<p>Обновление. На 2024 год запуск собранных apk непосредственно на устройстве не работает по неясным причинам, вызванных изменениями в termux.</p>
+
+</div>
+</body>
+</html>

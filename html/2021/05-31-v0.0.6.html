@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Выпуск транслятора</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Версия 0.0.6</h2>
+<p>Выпущено 
+  <a href="https://github.com/Vostok-space/vostok/releases/tag/lib-v0.0.5_ost-v0.0.6">обновление</a>
+  транслятора, библиотеки и сборщика Android приложений.
+</p>
+
+<ul>
+  <li>
+  Существенно <a href="05-09-js-index-check-optimization.html">уменьшен</a> расход памяти в 
+  сгенерированном коде JavaScript при наличии проверок индексов массивов.
+  </li>
+  
+  <li>Улучшена совместимость генерируемого кода на C со стандартом ISO C90. Исправлена генерация кода для ODD().
+  </li>
+  
+  <li>Воплощено распознавание расположения библиотеки по умолчанию в среде macOS.
+  </li>
+  
+  <li>
+  Добавлена возможность получения файла .jar в качестве цели трансляции.
+  </li>
+
+  <li>
+  В Android-сборщике улучшена совместимость с более новыми версиями SDK и увеличена гибкость
+  настройки сборки.
+  </li>
+  
+  <li>
+  Улучшена совместимость получаемых APK приложений с версиями Android выше 7-й.
+  </li>
+  
+</ul>
+
+<p>
+  Расширение возможностей установки
+<ul>
+  <li> В общедоступный репозиторий <a href="https://snapcraft.io/">SnapCraft</a>
+    выложен <a href="05-10-snap.html">Snap пакет</a> 
+  </li>
+
+  <li> Сформирован пакет и 
+    <a href="https://github.com/Vostok-space/homebrew-oberon">репозиторий</a> для Homebrew для установки в macOS
+  </li>
+</ul>
+</p>
+
+</body>
+</html>

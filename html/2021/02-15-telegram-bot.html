@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Telegram бот</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Telegram бот</h2>
+<p>
+  Вдобавок к демо-серверу, позволяющему в 
+  <a href="http://vostok.oberon.org/sandbox-hello.html">браузере</a> запускать код на Обероне, 
+  <a href="https://github.com/Vostok-space/vostok/commit/4807f29193f5615cecde918ab21bd2faa7d10c3e">сделал</a>
+  <a href="https://t.me/OberonVostokBot">telegram-бота</a>, позволяющего схожим образом запускать код прямо в чате.
+</p>
+
+<p>
+  В сообщении можно отсылать как текст модуля, который будет выполнен, так и скрипт с отдельными вызовами процедур. Чтобы бот получил сообщение в общем чате, в начало сообщения необходимо добавить косую черту, а для скриптового кода нужно указать ещё и сокращённое название языка программирования - <code>/O7:</code>. В индивидуальном чате с ботом дополнительных знаков не нужно.
+</p>
+
+<p> Поддерживаются 2-е дополнительные команды:</p>
+ <ol>
+ <li><code>/LIST</code> выводит список доступных модулей, правда, большинство из которых в режиме песочницы выступают лишь заглушками
+ <li><code>/INFO Module</code> выводит список экспортированных процедур модуля
+ </ol>
+
+</body>
+</html>
