@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Параллельность</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Накладные расходы проверок на RISC-V, ARM, Эльбрус, AMD64</h2>
+
+<style>
+  td,th {
+    background-color: #EEE;
+  }
+</style>
+
+<div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhrCnVHBP38bW7wfzNjYSVuWyLIVcOs7lDgLo27bQUfq_uDpczvD7SSNuGo2cx7mvT_i3HSS23GrT_C6fIIMlEgni1KQvMFUtlk5DWrO3uDpADJtMpbxJ_mPqEVovxCaDwCQhkGvdph9XI9RdZBGm5LhLlSQzn1p27I327L_Q6G9QeA0pIm8l4EyxLN/s4032/20220927_024530.jpg" style="display: block; padding: 0 3em; text-align: center; clear: left; float: right;"><img alt="" border="0" width="200" data-original-height="3024" data-original-width="4032" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhrCnVHBP38bW7wfzNjYSVuWyLIVcOs7lDgLo27bQUfq_uDpczvD7SSNuGo2cx7mvT_i3HSS23GrT_C6fIIMlEgni1KQvMFUtlk5DWrO3uDpADJtMpbxJ_mPqEVovxCaDwCQhkGvdph9XI9RdZBGm5LhLlSQzn1p27I327L_Q6G9QeA0pIm8l4EyxLN/s400/20220927_024530.jpg"/></a></div>
+
+<p>Получил в использование одноплатный компьютер StarFive VisionFive c 2-ядерным процессором на архитектуре RISC-V. На поставляемом с платой дистрибутиве Fedora провёл тестирование транслятора Восток и, в частности, проверку времени исполнения сгенерированного кода с проверками корректности и без.
+</p>
+
+<!--more-->
+
+<p>Замечу, что с пользовательской точки зрения, плата с поставляемым дистрибутивом Fedora, крайне неудобоварима - нестабильна и неповоротлива. Удобней использовать в качестве небольшого сервера.</p>
+
+<p>Были 
+<a href="https://github.com/Vostok-space/vostok/blob/master/test/benchmark/run.sh">протестированы</a> проверки, генерируемые транслятором Восток, и для сравнения проверки, генерируемые компилятором gcc при выключенной генерации проверок из Oberon в C. На RISC-V доступны только те, что включаются <code>-fsanitize=undefined -fno-sanitize=alignment -fsanitize-undefined-trap-on-error</code>. В проверки на уровне Oberon входят проверки индекса массива, переполнения диапазонов, инициализированности переменных, обращения по NIL и пользовательских утверждений. Компиляция из C была проведена без профилирования из-за недоступности. В качестве модельного кода служит сам транслятор.</p>
+
+<table><caption>RISC-V SiFive U74 RV64GC 1 GHz, Fedora, gcc</caption>
+<tr><th>                <th>Размер, байт <th>отношение<th>Время, секунд<th>отношение 
+<tr><th>Без проверок    <td>299 624      <td>1        <td>4,82         <td>1
+<tr><th>Проверки Oberon <td>320 160      <td>1,35     <td>5,33         <td>1,11
+<tr><th>san. undefined  <td>512 584   	 <td>1,71     <td>6,47         <td>1,34
+</table>
+
+
+<p>Стоит отметить низкие относительные накладные расходы на проверки. Эта особенность представляет большой интерес, потому что RISC-V, например, не использует флаги для выявления целочисленного переполнения в пользу явных проверок
+<!--iframe width="800px" height="360px" src="https://godbolt.org/e#z:OYLghAFBqd5QCxAYwPYBMCmBRdBLAF1QCcAaPECAMzwBtMA7AQwFtMQByARg9KtQYEAysib0QXAAx8BBAKoBnTAAUAHp0m8AVhNK0mDUAH0TyUkvrICeAZUboAwqloBXFgxAAmUvYAyeBkwAOTcAI0xiEAAOUgAHVAVCGwYnV3cvOISkgX9AkJZwyJiLTCtkoQImYgJUtw9vErKBCqqCXOCwiOjzSura9IbetoCOgq6ogEpzVBdiZHYOAFJPAGYA5FcsAGpFlYcFAnRaPFCAOgRd7EXJAEFrm4CCLaZ0dAhH59Itj9CJnYB2ABC9y23yoWwgJlCLjo1gYRgUL3QRlQADcIlRaKgAO4QJhfUJfZYANiYEz%2BiyBINBz1CJAIEAmu2Bt1BlIAItTiJgCLMGM9mfcORwprROABWXgeDiaUioTgOLYKGZzTA7VY8UgEDQiqYAay8ABZTlFJKbPMTxVEAJySa2ebxijiGqU6uWcXgKEDSbUykWkOCwJBoFixOgRciUENh%2BiRZDALgOviwiJeiChN2hAJVACenE1IbYggA8gxaHm/aQsCwDMBxJX8NyyuivZXMKpSi4CAtNY9ME7ZcdQsRc04sG6CMQ8Cx8/7MUxgAoAGp4TDY4uxRizmSCERidhSHfyJRqN06Lh6WsgExGMxDr2QKaoWLWAStgC0xZWnv7pVfHggex%2Bnqbw/BGfJCm6eJEn/YCvG8aDsgYdoIPGcxfyaBgWj6Zw6ng9DLH/bDhjyToih6Vo4KTA5WhQsjoimZVZnmXRJ0wHt/SdSVSGlWV5Q4VQomJd9iUNLZgGQZAtkTU5PAhBwvlwQgSHVFYLy2JxQ3DYhVK4CZeF9TRyVIA1PHFU4uGtSz/hWQ0pFtf4oi4Q09E4F0eLdfjPW9LUdSmQNEBQVAtNjSMIGjbSQGIVFRPfeNJMTTxpBoWhu2INMM0rLNmGICsC2CosCFLcs3WrWt61lRs/zwFs3XbTtu23PsB14IcR1yscFllSdp1nKZ50XFc1w3LduF4fhd1EcRDwm48VHUSsdEdK8bzvE4H0ZOUX2SD8vx/QjkjsBhHFw9JxR8Y66LGSIEKyWDTo8c7EP/K7IIaDCiKGODzsaT7aPA%2BjBkoh6QB%2BoZXq6TxGJVFiLzYjjRQlV1K34gAlABJIQHHfJctmi0SJPEyTpM8WTTkkeTFPwIgdOWNSvk0mMIlUqGDL8/UjVOa1uZ53neeJVznWRviPXMHzDP9AKIGDYKmbIChwtlyLRGIFgEwdZKU3SyhMtlbLc23QtGCKssK0qzAa0MCreCq5tMFbWV6uQLsOPIQR%2BzdNrRwwLqDKnGcxv6/RBtXddN2lTVZr3abktkRR5rPEAVkvQxr1MPR1vgJ9trfThP2/AjqtsQDjrgi8wNI67dGe5Iy8yGDkghyIL1%2B8ovpBluPrb/7K8glv27SDx%2B570Y%2B%2Bh5iDy1bkEcF7jeN4fiblRgBZImpJkuSIGOBgXFUP4IAUrYlJp3SGaV2NVJWfTfL9YzTPOp13Pn90OG8n12cFzxhYX0WJeM9F0qHUNEAA%3D%3D%3D"></iframe-->
+<iframe width="800px" height="500px" src="https://godbolt.org/e?hideEditorToolbars=true#z:OYLghAFBqd5QCxAYwPYBMCmBRdBLAF1QCcAaPECAMzwBtMA7AQwFtMQByARg9KtQYEAysib0QXAAx8BBAKoBnTAAUAHp0m8AVhNK0mDUAH0TyUgtQBXYsnYcApACYAzHgbJalrAGp7zgMIKBOi0eABGAHQIftj2kgCCcfFuBN5M6OgQKWmk3tlhAJS%2BAOwAQkneeVTeECZhlnQEbkYK6ehGqABumMRUtKgA7hBMuWG5TgBsTAVF9mUVlWlhJAQQBX7lCZVzACILxJgE1gxpG0m7HAV6nACsvAwavKic/t4W1ra%2BLjykBI8zpAA1iBHBMIgBOYqSUEAFmKzgmjhhkhhzhh1w4MPuj1Izw4vAUIGkfw4miucFgMEQKFQLAADnQeuRKGh6YziCBiJ0JjCALTIYDIZBcRyOaQ0WgEHqEiBhHFhNxMYgAT04P1ZbEEAHkGLRVaTeFgWAZgOIDaR8AdkE1uoTzZhVJhkJYpWreClMLQcaEwsQlcr/Bg7JpfsQ8Cw3Vc%2BkxgAoAGp4TADLV0xhumSCERidhSDPyJRqHE6dH6QwgExGMw%2BwmQK6oOlNAR23laxy8OkGTAAOVYdgASgBJIT%2BXlx7xcnmC7yC5DeEURNvmKw2HOhzB2HhXL0cO6kB7mvGD4ej8fcmFTmdzxwL3gkslXBCYdI9ShbzhY0gRmEADgiE2ckhcAi4Lfv%2BgHOMUe44niBJEr8/ykBS1Ksgy9BkBQEAoeynKdM4jj8jOIpinwjTSpQcrmgqzAqumGqMAQOp6jiRommaIaWk6NqYHaIYOk6Lobu6giet64R%2BiqgZYDiBBhhG3CXHw%2BixgmSYpmm8l5lm4i5vwgiKCo6jmjojh6Ca5amHo4Q1msuINngTacC2Pwdgw3a9pwR4jmOeHTkKV43kuHyrjJ66Rhiu77iGh5Dl53g%2BZe86LnelxXMCzjOBEwF4d%2BaLFN%2BeU3DcGIfhGNxcJlEwgWBQGVaBaJQQenCwcS/ypSAzg3BEUjIhMNzgo4xT9ZIeUTBizjYo1%2BLwQa5JUkhEBIFhaHMphtKoS%2BojECwwBEeKpHEDKFEhlR/q0bSmoMbq%2BrsZgxqGGxhp4FaXE8bwfHOq6GketuIY%2BuJAZBtJslhdGymJsmqb7j8unCKI2nirI%2BmFkZ7WmWWFZVlZ8B1nZDkcE57adj2bCcPEfYALK%2BbOiU1KEDCWKoBQEsuti6CFglvjuE1RaTFNU/5ji024DNM9N96kI%2Bz4cjZ24le14J/lwXD5Y4XAwhMSsqw1PNTYSLUzYhc2LWt7IrUtG0sHgdIKDyno7aKe2SmRsryoqNEaXR2pXcxt2scGj3PXgto4u9Anpt9om%2Bv6kn%2B6G4Yg0p8bg2pUO8DDWk5gjekFoZIY6FwaPGBZ1bY7ZjYMM2WrOUT7kcJb1s8jUnpFAl16Lu8K5swcHPhdzTycPXNswk3tAt35iW3q1EtPlg0ttelFXgtluX5d%2BhXFbwEYTJImXft%2BIoFc4e8it%2B2v97rcHJQCaXFBCjg3BMlXpTcOX5ZB27jWfuJNWLKUYoukVz6TxmlcboB17IPBhEAA%3D"></iframe>
+Тем не менее, совокупно в проверках он не только не отстаёт, но даже опережает другие архитектуры, что для многих, не знакомых с задумкой, является контринтуитивным.</p>
+
+  
+<p>Доступный для этой же платы серверный образ Ubuntu позволяет задействовать профилировщик и проверить больше вариантов запуска, но даже самый эффективный из них значительно уступает тому варианту без профилирования, что есть на дистрибутиве от разработчика платы.</p>  
+  
+<table><caption>RISC-V SiFive U74 RV64GC 1 GHz, Ubuntu</caption>
+<tr><th>                     <th>Размер, байт <th>отношение<th>Время, секунд<th>отношение 
+<tr><th>gcc, Без проверок    <td>297 168      <td>1        <td>5,53         <td>1 
+<tr><th>gcc, Проверки Oberon <td>313 560      <td>1,06     <td>6,27         <td>1,13
+<tr><th>gcc, san. undefined  <td>481 472   	  <td>1,62     <td>7,31         <td>1,32
+<tr><th>gcc, san. address    <td>2 111 504    <td>7,11     <td>11,49        <td>2,08
+<tr><th>gcc, san. u. + a.    <td>2 344 968    <td>7,89     <td>16,81        <td>3,04
+
+<tr><th>clang, Без проверок    <td>261 000    <td>0,88     <td>6,39         <td>1,16 
+<tr><th>clang, Проверки Oberon <td>298 064    <td>1,003    <td>7,66         <td>1,39
+<tr><th>clang, san. undefined  <td>269 192    <td>0,91     <td>7,11         <td>1,29  
+
+<tr><th>Java                   <td>           <td>         <td>374,4        <td>67,7  
+</table>
+
+
+  <div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhekbRer2F-XStSfhBW1JMTxvxGV9GJyCxyMuBg0Wz8RRVGMjE9NW6VVj9iaQuVgNw6WY9xbMjed8-a1bzV5DoblWwsRhlPjSS9GCQIWN-x4gTmVFdgE0-x3_1Rdz7oCyo886C75is5IFL_hdtvfKZKLFaQ_DrdQ0RptCCrx8lrwb-hiqvh1TLNz20P/s3757/20221003_043932.jpg" style="display: block; padding: 1em 0; text-align: center; clear: right; float: right;"><img alt="" border="0" width="320" data-original-height="2075" data-original-width="3757" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhekbRer2F-XStSfhBW1JMTxvxGV9GJyCxyMuBg0Wz8RRVGMjE9NW6VVj9iaQuVgNw6WY9xbMjed8-a1bzV5DoblWwsRhlPjSS9GCQIWN-x4gTmVFdgE0-x3_1Rdz7oCyo886C75is5IFL_hdtvfKZKLFaQ_DrdQ0RptCCrx8lrwb-hiqvh1TLNz20P/s320/20221003_043932.jpg"/></a></div>
+
+<p>Заодно провёл тестирование на ряде других доступных мне архитектурах, начиная с Raspberry Pi 400 c 4-ядерным процессором. Для компиляции через С было включено профилирование.</p>
+  
+<table><caption>ARM Cortex-A72 1.8 GHz</caption>
+<tr><th>                  <th>Размер, байт<th>отношение<th>Время, секунд<th>отношение 
+<tr><th>C, Без проверок   <td>354 216     <td>1        <td>1,83         <td>1 
+<tr><th>C, Проверки Oberon<td>386 992     <td>1,09     <td>2,06         <td>1,13
+<tr><th>C, san. undefined <td>657 320     <td>1,86     <td>2,27         <td>1,24
+<tr><th>C, san. address   <td>2 275 480   <td>6,42     <td>6,07         <td>3,32
+<tr><th>C, san. u.+a.     <td>2 541 624   <td>7,18     <td>6,58         <td>3,60
+<tr><th>Java              <td>            <td>         <td>24,56        <td>13,42
+<tr><th>JavaScript        <td>            <td>         <td>81,76        <td>44,68
+</table>
+  
+
+<p>Тестирование на 8-ядерном Эльбрусе без профилирования</p>
+  
+<table><caption>E8C 1.2 GHz</caption>
+<tr><th>                          <th>Размер, байт<th>отношение<th>Время, секунд<th>отношение
+<tr><th>lcc, Без проверок         <td>908 168     <td>1        <td>2,55         <td>1 
+<tr><th>lcc, Проверки Oberon      <td>1 522 728   <td>1,68     <td>4,16         <td>1,63
+<tr><th>lcc, san. address         <td>7 654 808   <td>8,43     <td>8,56         <td>3,36
+  
+<tr><th>clang, Без проверок       <td>2 527 576   <td>2,78     <td>2,29         <td>0,9
+<tr><th>clang, Проверки Oberon    <td>2 327 024   <td>2,56     <td>2,96         <td>1,16
+  
+<tr><th>Java                      <td>   	      <td>         <td>47,9         <td>13,8
+<tr><th>JS со всеми проверками    <td>   	      <td>         <td>1054,2       <td>303,8
+<tr><th>JS без границ массивов    <td>   	      <td>         <td>863,9        <td>248,96
+<tr><th>JS и без арифметики       <td>   	      <td>         <td>789,2        <td>227,44
+</table>
+  
+
+<!--
+686 984 	ost 			2.62 sec   492176 KiB
+1 293 352 	ost-asrt 		4.28 sec   500416 KiB
+6 250 168 	ost-asan 		8.80 sec   653088 KiB
+7 906 168 	ost-uasan-asrt	14.09 sec  659952 KiB
+!-->
+  
+<p>Бросается в глаза большой размер исполняемых файлов, особенно для clang, но что ещё интересней для этого компилятора, так это аномальное уменьшение размера при добавлении проверок Oberon. Жаль, что этот трюк не удался с временем исполнения. Проверки Оберона оказались самыми дорогими среди всех остальных платформ — в лучшем случае +30% ко времени. Если взглянуть на код сложения с контролем переполнения, то становится приблизительно понятно почему, хотя это и не повод для далекоидущих выводов.</p>
+
+<iframe width="800px" height="400px" src="https://ce.mentality.rip/e#g:!((g:!((g:!((h:codeEditor,i:(filename:'1',fontScale:10,fontUsePx:'0',j:1,lang:c%2B%2B,selection:(endColumn:1,endLineNumber:9,positionColumn:1,positionLineNumber:9,selectionStartColumn:1,selectionStartLineNumber:9,startColumn:1,startLineNumber:9),source:'%23include+%3Cstdlib.h%3E%0A%0Aint+add(int+a,+int+b)+%7B%0A++if+(__builtin_sadd_overflow(a,+b,+%26a))+%7B%0A++++abort()%3B%0A++%7D%0A++return+a%3B%0A%7D%0A'),l:'5',n:'0',o:'C%2B%2B+source+%231',t:'0')),k:41.845730027548214,l:'4',n:'0',o:'',s:0,t:'0'),(g:!((h:compiler,i:(compiler:elcc12706,deviceViewOpen:'1',filters:(b:'0',binary:'1',binaryObject:'1',commentOnly:'0',demangle:'0',directives:'0',execute:'1',intel:'0',libraryCode:'0',trim:'1'),flagsViewOpen:'1',fontScale:10,fontUsePx:'0',j:1,lang:c%2B%2B,libs:!(),options:'-O3',selection:(endColumn:1,endLineNumber:1,positionColumn:1,positionLineNumber:1,selectionStartColumn:1,selectionStartLineNumber:1,startColumn:1,startLineNumber:1),source:1),l:'5',n:'0',o:'+E2K+lcc+1.27.06+(Editor+%231)',t:'0')),k:58.1542699724518,l:'4',n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),version:4"></iframe>(Editor+%231)',t:'0')),k:58.1542699724518,l:'4',n:'0',o:'',s:0,t:'0')),l:'2',n:'0',o:'',t:'0')),version:4  
+  
+<p>Для исполнения через Java нет какого-либо провала по сравнению с другими архитектурами, что для широкого командного слова достижимо не так-то и просто. А вот по времени работы через JavaScript в node можно предположить, что этот скриптовый язык выполняется через пошаговую интерпретацию, что обусловило существенную разницу между кодом с проверками и без. Для других архитектур разница невелика, поэтому и не приводилась в таблице. В отличии от node у движка JavaScript в Firefox хорошая производительность, но benchmark не рассчитан на работу в браузере.</p>
+
+<p>В режиме 128-битных указателей, при которых Эльбрус предоставляет дополнительную аппаратную защиту от повреждения буферов и использования неинициализированных переменных, полноценно запустить benchmark не удалось, потому что длинные вычисления обрываютcя прерыванием. Просто собранный транслятор работает как положено, поэтому можно сравнить его время работы в 128-битном режиме с отключёнными пересекающимися проверками от Oberon и в 64-битном режиме с включёнными.</p>
+<table><caption>E8C 1.2 GHz</caption>
+<tr><th><th>Время, сек.
+<tr><th>128 bit<td>0,86
+<tr><th>64 bit <td>0,55
+</table>
+  
+<br/>
+
+<p>Тестирование на обычном ПК с включённым профилированием. Добавлены замеры при компиляции через простой неоптимизирующий Tiny C Compiler.</p>
+
+<table><caption>Intel Core i3-4160 3.6 GHz</caption>
+<tr><th>                     <th>Размер, байт <th>отношение<th>Время, секунд<th>отношение 
+<tr><th>gcc, Без проверок    <td>379 096      <td>1        <td>0,44         <td>1
+<tr><th>gcc, Проверки Oberon <td>424 160      <td>1,12     <td>0,52         <td>1,18
+<tr><th>gcc, san. undefined  <td>637 144   	  <td>1,68     <td>0,57         <td>1,30
+<tr><th>gcc, san. address    <td>2 386 032    <td>6,29     <td>0,77         <td>1,75
+<tr><th>gcc, san. u.+a.      <td>2 684 912    <td>7,08     <td>0,95         <td>2,16
+
+<tr><th>clang, Без проверок  <td>489 776      <td>1,29     <td>0,45         <td>1,02
+<tr><th>clang, Проверки Oberon<td>387 360     <td>1,02     <td>0,51         <td>1,16
+<tr><th>clang, san. undefined<td>567 576   	  <td>1,5      <td>0,53         <td>1,20
+<tr><th>clang, san. address  <td>2 475 544    <td>6,53     <td>0,81         <td>1,84
+<tr><th>clang, san. u.+a.    <td>2 487 896    <td>6,56     <td>0,92         <td>2,09
+  
+<tr><th>tcc, Без проверок    <td>472 056      <td>1,25     <td>1,07         <td>2,43
+<tr><th>tcc, Проверки Oberon <td>607 984      <td>1,6      <td>3,84         <td>8,73
+
+<tr><th>Java                 <td>             <td>         <td>4,50         <td>10,23
+<tr><th>JavaScript           <td>             <td>         <td>15,36        <td>34,91
+</table>
+
+<p>Тестирование на смартфоне Samsung Galaxy S20 FE из Termux через clang. Профилирование было выключено, потому что эффективность кода после него оказалась в 2-а раза ниже непрофилированного.
+</p>
+  
+<table><caption>AArch64 2.73 GHz Mongoose M5</caption>
+<tr><th>                <th>Размер, байт <th>отношение<th>Время, секунд<th>отношение 
+
+<tr><th>Без проверок    <td>401 280      <td>1        <td>0,63         <td>1
+<tr><th>Проверки Oberon <td>379 640      <td>0,95     <td>0,69         <td>1,10
+<tr><th>san. undefined  <td>454 480   	 <td>1,13     <td>0,69         <td>1,10
+<tr><th>san. address    <td>1 115 240    <td>2,78     <td>1,21         <td>1,92
+<tr><th>san. u.+a.      <td>986 840      <td>2,46     <td>1,29         <td>2,05
+
+<tr><th>Java            <td>             <td>         <td>8,47         <td>13,44
+<tr><th>JavaScript      <td>             <td>         <td>23,44        <td>37,21
+</table>
+  
+<p>Помимо проваленного профилирования, clang продолжил чехарду с размером исполняемого файла. Производительность кода в разы выше чем на Pi, и даже забавно, что смартфон всего лишь на треть отстал от ПК. Смартфоны уже давно технически готовы к работе в качестве легковесных ПК, но не используются так из-за отстутствия соответствующей воли. Тот же режим DEX, доступный на премиальных Samsung — это лишь бедный родственник основной потребительской системы.</p>
+
+<br/>
+  
+<h3>Заключение</h3>
+<ul>
+  <li>Компиляторные проверки C доступны не везде, не всегда, и задействовать их бывает непросто. С проверками от Oberon не возникло никаких проблем и не потребовало правок.</li>
+  <li>Проверки на уровне Oberon оказываются во всех смыслах дешевле проверок уровня C на всех протестированных платформах, несмотря на то, что проверки C составляются на уровне компилятора и покрывают меньше случаев, чем проверки корректности Oberon, существущие на правах обычного кода. Эффективность достижима благодаря:
+    <ul>
+      <li>Особенностям Оберона, более располагающим к возможностям проверок.</li>
+      <li>Cпецифическим решениям транслятора Восток.</li>
+      <li>Высокооптимизирующим компиляторам С, позволяющим генерировать эффективный код проверок, не имея специальных знаний о них.</li>
+    </ul>
+  </li>
+  <li>Аппаратные проверки тоже имеют свою цену, и на Эльбрусе, единственной платформе, на которой они доступны, аппаратные проверки обходятся даже дороже программных, которые на нём и так оказались самыми дорогими в сравнении с другими платформами.</li>
+  <li>Проверки имеют вполне приемлемую цену для того, чтобы во многих случаях их никогда не отключать даже при компиляции исходного кода на C, не говоря уже про Oberon.</li>
+</ul>
+
+</body>
+</html>

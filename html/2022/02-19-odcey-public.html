@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>odcey</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>odcey</h2>
+
+<p>
+  Выпущена начальная версия утилиты <a href="https://github.com/Vostok-space/odcey">odcey</a> — 
+  преобразователя насыщенного текстового формата BlackBox Component Builder .odc в плоский UTF-8 текст.
+  Утилита появилась как побочный эффект изучения блэкбоксовского формата и сопровождения
+  установочного пакета для программы odcread, написанной на C++. 
+  odcey может рассматриваться как замена заброшенной odcread.
+</p>
+
+<p>Доступны две основные команды:</p>
+  <ol>
+    <li><code translate='no'>text</code> для вывода содержимого объектов типа <code>TextModels.StdModel</code></li>
+    <li><code translate='no'>git</code> для встраиванивания в .git в качестве текстового конвертера 
+      для удобного просмотра изменений через <code>git diff</code> и аналоги
+    </li>
+  </ol>
+
+
+<p>До стабилизации в собранном виде доступна только в snapcraft в edge потоке
+  <iframe src="https://snapcraft.io/odcey/embedded?button=white" frameborder="0" width="100%" height="280px" style="border: 1px solid #CCC; border-radius: 2px;"></iframe>
+</p>
+
+</body>
+</html>

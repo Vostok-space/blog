@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Выпуск транслятора</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Транслятор 0.0.10 и Web-среда 0.2</h2>
+<style>
+  .incorrect { color	: red; 	}
+  .disabled  { display	: none; }
+</style>
+
+<p lang='ru'>
+  Выпущено <a href="https://github.com/Vostok-space/vostok/releases/tag/lib-v0.0.9_ost-v0.0.10">обновление</a>
+  транслятора 0.0.10, библиотеки по умолчанию 0.0.9 и веб-среды для взаимодействия с транслятором 0.2.
+</p>
+
+<script>
+function switchLang(lang) {
+  const Languages = ["en", "ru"];
+
+  function setDisplay(lang, value) {
+    var els, i;
+    els = document.querySelectorAll('[lang="' + lang + '"]');
+    console.log(lang, value, els);
+    for (i = 0; i < els.length; i += 1) {
+      if (els[i].nodeName != "HTML") {
+        if (value) {
+      	  els[i].classList.remove('disabled');
+        } else {
+          els[i].classList.add('disabled');
+        }
+      }
+    }
+  }
+
+  var i;
+  if (Languages.indexOf(lang) == -1) {
+    lang = Languages[0];
+  }
+  for (i = 0; i < Languages.length; i += 1) {
+    setDisplay(Languages[i], Languages[i] == lang);
+  }
+}
+
+function switchLangToPreferable() {
+  switchLang(window.navigator.language.slice(0, 2));
+}
+  
+switchLangToPreferable();
+</script>
+
+
+<!--more-->
+
+<ul lang='ru'>
+  <li> Изменено поведение при проверке принадлежности множеству числа, 
+    выходящего за пределы возможных значений.
+    Теперь это считается ошибкой, а не корректной проверкой равной <code>FALSE</code>.
+    Это вызвано исправлением логического противоречия, появляющегося в трактовке чисел, 
+    выходящих за границы, как отсутствующие при дополнении множества, после которого эти числа должны
+    считаться присутствующими, что невозможно без выделения дополнительной памяти. 
+    <table>
+      <tr><td><code>23 IN  {}</code></td><td>= FALSE</td></tr>
+      <tr><td><code>32 IN  {}</code></td><td>= FALSE</td></tr>
+      <tr><td><code>23 IN -{}</code></td><td>= TRUE</td></tr>
+      <tr><td><code>32 IN -{}</code></td><td class='incorrect'>= FALSE</td></tr>
+    </table>
+    Также, как следствие, некорректная трактовка потенциально может служить препятствием 
+    для переносимости и расширимости.
+  </li>
+  <li> Для генерации в Java и JavaScript создана возможность генерации
+    строк напрямую в байтовое представление, минуя родные для языков строки,
+    а также возможность вынесения прямых значений строк в константы модуля.
+    Это может немного ускорить взаимодействие со строками.
+  </li>
+  <li> Добавлена опция командной строки, позволяющая выбрать язык пользовательских сообщений.
+    <code>-msg-lang:(eng|rus|ukr)</code>
+  </li>
+  <li>
+    В режиме продолжения разбора после выявления ошибки устранено падение при добавлении
+    инструкции после 1-го нераспознанного ошибочного кода в блоке.
+  </li>
+  <li>
+    Исправлена генерация в C экспортированных объявлений, содеражщих неэкспортированных объявлений-констант.
+  </li>
+  <li>
+    Исправлена работа с присваиванием однолитерной строки, задаваемой обозначением.
+  </li>
+  <li>
+    Установлено адекватное значение по умолчанию в опции генератора Oberon, приводящее к тому,
+    что кириллические имена генерируются в исходном виде без перекодирования.
+  </li>
+</ul>
+
+<p lang='en'>
+  
+</p>
+
+<ul lang='en'>
+<li> Ability to directly generate strings as byte-arrays and moving string constants to
+    declarations in Java and JavaScript to improve performance
+<li> Ability to set interface language using CLI argument -msg-lang:(eng|rus|ukr)
+<li> IN-checks out of range interpreted as errors instead of correct FALSE values.
+<li> Fixed range of SET in calculations.
+<li> Fixed crashing after first wrong statement in the group
+<li> Fixed generation to C exported delcarations, which are use unexported named constants
+<li> Fixed assigning of one-letter string, which set by a designator
+<li> Fixed default value of Oberon generator, that leads to cyrillic identifiers in the source form
+</ul>
+
+<div lang='ru'><h3>В библиотеке:</h3>
+<ul>
+<li> Добавлен модуль ввода In, в основном, соответствующий документу "The Oakwood Guidelines for Oberon-2".
+<li> В процедуре IntToChars0X.Dec заменено ошибочное дополнение 0X на корректное пробелами.
+</ul>
+</div>
+
+<div lang='en'><h3>Library by default:</h3>
+<ul>
+<li> Added module In similar to module for inpurt from standard source from "The Oakwood Guidelines for Oberon-2".
+<li> Fixed padding in IntToChars0X.Dec. 0X replaced by space.
+</ul>
+</div>
+
+<h3 lang='ru'>В коде для Web-среды:</h3>
+<h3 lang='en'>Web-playground:</h3>
+
+<div class="separator" style="clear: both;display:block">
+<a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg9Sw2DyPQUl5rS4Sg2FEukUNkNrSfNM4vTEj_zIN7rfriEcQRryPXeCKh79BGkNR-Ygvp7nE_Dwx1qog_fYWcJnr8yonvI8XbNUyyrddeyG1fCBCl9JD5iSeMhnMkeyK8NJgMu-9My-MEvEUYgq-CljAWLu-4Bydysms0RZXMwElB9pB-1mDw3cexU/s2400/Vostok-sandbox-mobile-light.jpg" style="display: inline; padding: 1em 0;float:right">
+<img alt="" border="0" height="400" data-original-height="2400" data-original-width="1080" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg9Sw2DyPQUl5rS4Sg2FEukUNkNrSfNM4vTEj_zIN7rfriEcQRryPXeCKh79BGkNR-Ygvp7nE_Dwx1qog_fYWcJnr8yonvI8XbNUyyrddeyG1fCBCl9JD5iSeMhnMkeyK8NJgMu-9My-MEvEUYgq-CljAWLu-4Bydysms0RZXMwElB9pB-1mDw3cexU/s400/Vostok-sandbox-mobile-light.jpg"/></a></div>
+
+<ul lang='ru'>
+<li>Добавлен режим сервера, позволяющий получить неограниченный доступ к компьютеру, по умолчанию доступный
+  только для локальных клиентов. Потенциально это позволяет получить гибкую среду для полноценной работы с 
+  компьютером в обероно-подобной среде.
+<li>Возможность работы сервера через https.
+<li>Возможность запуска кода через Java и JavaScript в дополнение к запуску через C. Это может быть удобным
+  для запуска сервера из среды Termux на ОС Android.
+<li>Улучшена работа сервера с временными данными.
+<li>Добавление ограничения на одновременное количество запросов к серверу для быстрого ответа при перегрузке.
+<li>Обработчику Telegram-запросов добавлена возможность восстановления обработки после ошибок.
+<li>Telegram-bot начал помечать вывод как ответы на сообщения.
+<li>Поправлена возможность запуска функций сервера при обращении через Telegram.
+<li>Автоматическая подстройка страниц под малые экраны переносимых устройств, где журнал становится доступен
+    по начальной вкладке наравне с редакторами.
+<li>Webmanifest для index.html и sandbox.html, позволяющие открывать страницы как приложения.
+<li>Добавление русской версии отображаемого пользователю текста и автоматического выбора языка 
+    по настройкам браузера.
+<li>Гармонизация стиля отображения страниц, добавление светлой темы и автоматический выбор 
+    цветовой схемы по настройкам браузера.
+<li>Возможность изменения размера редактора.
+</ul>
+
+<ul lang='en'>
+<li>Full access mode for the server, which an provides unrestricted version of the modules. By default
+  available only for local clients. Have a potential to transformation to flexible Oberon-like environment
+  for work with computer.
+<li>For the server available https.
+<li>Possibility to run code through Java or JavaScript instead of usual intermediate C-code. It is may be
+  useful to run the server from Termux on Android OS.
+<li>Improved server's work with temporary data.
+<li>Restriction on simultaneous requests to the server for fast response during overload. 
+<li>Recovering after errors in the message handling in the Telegram-bot.
+<li>Telegram-bot started marking answers as a reply to a message.
+<li>Fixed handling of server functions when it called through Telegram.
+<li>Automatic adaptation of the page view for small screens of mobile devices.
+<li>Webmanifests for index.html and sandbox.html, which allow to open pages as applications.
+<li>Adding russian localization for interface.
+<li>Harmonized the page style. Added a light theme and automatic selection of preferable color-scheme 
+  according to browser settings.
+<li>Possibility to change size of editor screen.
+</ul>
+
+
+<p lang='ru'>
+  Транслятор и библиотека по-прежнему доступны для установки из 
+  <a href="https://wiki.oberon.org/repo">deb</a> и 
+  <a href="https://github.com/Vostok-space/homebrew-oberon">homebrew</a> репозиториев.
+  В <a href="https://snapcraft.io/vostok">snap-пакет</a> встроен и сервер.
+  Web-среда также доступна для ознакомления на 
+  <a href="https://vostok.oberon.org/sandbox.html">сайте</a>.
+</p>
+
+<p lang='en'>
+  The translator and the library available to install from
+  <a href="https://wiki.oberon.org/repo">deb</a>and 
+  <a href="https://github.com/Vostok-space/homebrew-oberon">homebrew</a> repos.
+  The <a href="https://snapcraft.io/vostok">snap-package</a> also include the server.
+  Web-environment also available on the <a href="https://vostok.oberon.org/sandbox.html">web-site</a>.
+</p>
+
+
+
+<script>
+switchLangToPreferable();
+</script>
+
+</body>
+</html>

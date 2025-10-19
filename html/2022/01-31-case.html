@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CASE по типу</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>CASE для указателей и записей</h2>
+
+<p>
+  <a href="https://github.com/Vostok-space/vostok/commit/81449db0b11b1991e7f0849a8ef19fda5b6257e1">Добавлена</a>
+  поддержка указателей и записей в CASE, введённой в пересмотре 2013 года сообщения о языке,
+  и необходимой для эффективного перехода по указанным в ветвях типах.
+</p>
+
+<!--more-->
+
+<pre><code>MODULE Case; IMPORT log;
+  TYPE
+    Msg    = RECORD END;
+
+    Start  = RECORD(Msg) END;
+    Next   = RECORD(Msg) exist: BOOLEAN; val: INTEGER END;
+
+    Sample = RECORD i: INTEGER END;
+
+  PROCEDURE Handle(VAR s: Sample; VAR m: Msg);
+  BEGIN
+    CASE m OF
+      Start: s.i := 0 |
+      Next: m.exist := s.i &LT; 7; IF m.exist THEN m.val := s.i; INC(s.i) END
+    END
+  END Handle;
+    
+  PROCEDURE Go*;
+  VAR s: Sample; start: Start; next: Next;
+  BEGIN
+    Handle(s, start);
+    Handle(s, next);
+    WHILE next.exist DO
+      log.in(next.val);
+      Handle(s, next)
+    END
+  END Go;
+
+END Case.</code></pre>
+
+<p>Воплощение минимально необходимое — в качестве выражения в CASE допустимы лишь формальные параметры для записей и локальные переменные и параметры без VAR для указателей. Такое ограничение даёт и простоту воплощения, и гарантию невозможности подмены записи на несовместимое расширение уже после осуществления перехода по выбранному типу.
+</p>
+
+<p>
+  В текущей генерации переход по типу не оптимизирован — это простой последовательный поиск.
+</p>
+
+</body>
+</html>

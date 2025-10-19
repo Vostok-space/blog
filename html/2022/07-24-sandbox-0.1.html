@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Песочница</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2><span lang="ru">Web-среда 0.1 для транслятора</span> <span lang="en">Web-sandbox 0.1 for the translator</span></h2>
+<style>
+code, pre {
+  background-color: #EEE;
+}
+</style>
+
+<p lang="ru">Доработана и обозначена как версия 0.1 написанная на Go и JavaScript
+  <a href="https://github.com/Vostok-space/vostok/tree/master/demo-server">web-среда</a>(песочница) 
+  для взаимодействия с транслятором Восток. 
+  Среда позволяет редактировать модули на Обероне, запускать экспортированные процедуры, 
+  преобразовывать модули на другие языки программирования. 
+  Модули, доступные по умолчанию из окружения транслятора, ограничены в доступе к возможностям сервера.
+</p>
+
+<p lang="en">
+  The <a href="https://github.com/Vostok-space/vostok/tree/master/demo-server">web-sandbox</a> 
+  written in Go and JavaScript for interacting with the Vostok translator has been fixed 
+  as version 0.1. The sandbox allows you to edit modules on Oberon, run exported procedures, 
+  convert modules to other programming languages. 
+  Modules available from the default translator's environment have restricted access to server's resources.
+</p>
+
+<script>
+function switchLang(lang) {
+  const Languages = ["en", "ru"];
+
+  function setDisplay(lang, value) {
+    var els, i;
+    els = document.querySelectorAll('[lang="' + lang + '"]');
+    console.log(lang, value, els);
+    for (i = 0; i < els.length; i += 1) {
+      if (els[i].nodeName != "HTML") {
+              els[i].style.display = value;
+      }
+    }
+  }
+
+  var i;
+  for (i = 0; i < Languages.length; i += 1) {
+    setDisplay(Languages[i], "none");
+  }
+  if (Languages.indexOf(lang) == -1) {
+    lang = Languages[0];
+  }
+  setDisplay(lang, "");
+}
+
+function switchLangToPreferable() {
+  switchLang(window.navigator.language.slice(0, 2));
+}
+  
+switchLangToPreferable();
+</script>
+
+<!--more-->
+
+<div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiH49Gd8mRM8bkhieYcpG9x9Ld3rQiGB-qB_-fhtUMS7eP0Wyxn1vqIxUorkABxzgaa9TBN5REOdBiZng7uxekJmHeaVV2qO1D5mKhfqyf0Oi91QluwhlR_b1oa80FRFdF-Kkusw1LsfNHUrXlPdHaGtXwMGlUJ5APp48S63-7QAWGyFaPW9Q_Ddwmr/s975/Vostok-sandbox-power2.png" style="display: block; padding: 1em 0; text-align: center; "><img alt="" border="0" width="600" data-original-height="670" data-original-width="975" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiH49Gd8mRM8bkhieYcpG9x9Ld3rQiGB-qB_-fhtUMS7eP0Wyxn1vqIxUorkABxzgaa9TBN5REOdBiZng7uxekJmHeaVV2qO1D5mKhfqyf0Oi91QluwhlR_b1oa80FRFdF-Kkusw1LsfNHUrXlPdHaGtXwMGlUJ5APp48S63-7QAWGyFaPW9Q_Ddwmr/s600/Vostok-sandbox-power2.png"/></a></div>
+
+<span lang="ru">Доработки:
+<ol>
+<li> Возможность работы с несколькими модулями.
+<li> Использование текущего редактора в качестве стандартного источника ввода.
+<li> Добавление подсветки строк и комментариев, поддержка сниппетов и включение дополнения ввода.
+<li> Сохранение ввода в локальном web-хранилище.
+<li> Возможность сохранения на сервере с предоставлением доступа как для изменения, так и только для просмотра.
+<li> Возможность фиксации содержимого командной строки в виде кнопки.
+<li> Возможность запуска кода в командной строке с клавиатуры.
+<li> Возможность запуска кода из журнала.
+<li> Минимальная начальная конфигурация среда сокращена до одного журнала.
+<li> Выбрано тёмное оформление и добавлена иконка.
+</ol>
+</span>
+
+<span lang="en">Enhancements:
+<ol>
+<li> Ability to work with multiple modules.
+<li> Using the current editor as the standard input source.
+<li> Adding string and comment highlighting, supporting snippets and enabling autocompletion.
+<li> Saving input to a local web-storage.
+<li> Ability to save on a server with access for editing and for viewing only.
+<li> Ability to fix the content of the command line as a button.
+<li> Ability to run code in the command line by the keyboard.
+<li> Ability to run code from a log.
+<li> Minimal initial configuration of sandbox reduced to a single log.
+<li> Dark theme has been chosen and the icon has been added.
+</ol>
+</span>
+
+<iframe id="odysee-iframe" width="560" height="315" 
+        src="https://odysee.com/$/embed/Vostok-sandbox-example/b0e6c64bfb8eb4a517c747b5bcfaec30071127ba?r=E79nzWoVG97v4p5U7yPfQA6k1kFs83PB" 
+        allowfullscreen></iframe>
+
+<details><summary>Youtube</summary>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/KOlCyzX52MQ"
+          title="YouTube video player" frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+  </iframe>
+</details>
+
+<p>
+  <span lang="ru">Web-среда доступна по адресу</span>
+  <span lang="en">The sandbox available by URL</span>
+  <a href="http://vostok.oberon.org/sandbox.html">vostok.oberon.org/sandbox.html</a>
+</p>
+
+<p lang="ru"> Для сборки и запуска по месту необходимо выполнить:
+</p>
+<p lang="en"> For local building and running needs to execute:</p>
+<pre translate='no'><code>cd vostok/demo-server
+# go version &ge; 1.16
+go build server.go
+./server &amp;
+browse http://localhost:8080/
+</code></pre>
+
+<p lang="ru">Для встраивания в страницу необходимо записать подобный код:</p>
+<p lang="en">For embedding to HTML-page needs code like this:</p>
+
+<pre><code id='HtmlCode' translate='no'></code></pre>
+
+<script>
+function setHtmlText() {
+  var t;
+  t = "<link rel='stylesheet' type='text/css' href='vostokbox.css'>\n" + 
+      "<script src='https://ajaxorg.github.io/ace-builds/src/ace.js'\n" +
+      "        type='text/javascript' charset='utf-8'><" + "/script>\n" +
+      "<script src='https://ajaxorg.github.io/ace-builds/src/ext-language_tools.js'\n" +
+      "        type='text/javascript' charset='utf-8'><" + "/script>\n" +
+      "<script src='ace-oberon.js' type='text/javascript' charset='utf-8'><" + "/script>\n" +
+      "<script src='vostokbox-config.js' type='text/javascript' charset='utf-8'><" + "/script>\n" +
+      "<script src='vostokbox.js'  type='text/javascript' charset='utf-8'><" + "/script>\n" +
+      "\n" +
+      "<div id='vostokbox-tabs'></div>\n" +
+      "\n" +
+      "<div>\n" +
+      "  <div class='vostokbox-editor'>MODULE One;\n" + 
+      "END One.</div>\n" +
+      "  <div class='vostokbox-editor'>MODULE Two;\n" + 
+      "IMPORT One;\n" +
+      "END Two.</div>\n" +
+      "  <div id='vostokbox-log'></div>\n" +
+      "</div>\n" +
+      "\n" +
+      "<div id='vostokbox-button-runners'></div>\n" +
+      "<div id='vostokbox-runners'></div>\n"+
+      "\n" +
+      "<script>VostokBox.createByDefaultIdentifiers(document, ace, {\n" +
+      "  runners:['One'], buttonRunners:['Two']});\n" + 
+      "<" + "/script>\n";
+  document.getElementById('HtmlCode').innerText = t;
+}
+
+switchLangToPreferable();
+setHtmlText();
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Выпуск транслятора</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Версия 0.0.9</h2>
+
+<p>Выпущено 
+  <a href="https://github.com/Vostok-space/vostok/releases/tag/lib-v0.0.8_ost-v0.0.9">обновление</a>
+  транслятора, библиотеки и сборщика Android приложений. Как и прежде, доступна установка и автоматическое
+  обновление из 
+  <a href="https://snapcraft.io/vostok">Snap Store</a>,
+  <a href="https://wiki.oberon.org/repo">deb-репозитория</a> и
+  <a href="https://github.com/Vostok-space/homebrew-oberon">Homebrew</a>.
+  Также доступна <a href="http://vostok.oberon.org/sandbox.html">Web-песочница</a>.
+</p>
+
+<!--more-->
+
+<ul>
+  <li>Добавлена <a href="01--case.html">поддержка</a> указателей и записей в операторе CASE, 
+    который в этом случае выступает аналогом WITH в Oberon-2 и Component Pascal.
+  </li>
+  <li>
+    Добавлен <a href="01--block-scheme.html">генератор</a> блок-схем в формате Plant UML.
+  </li>
+  <li>В Windows учтён предпочитаемый пользователем язык интерфейса и обеспечен корректный вывод кириллицы.</li>
+  <li>Исправлено определение такого состояния инициализированности переменной, при котором всё ещё необходима
+      проверка во время исполнения.</li>
+  <li>Добавлена корректировка тип определителя в преобразуемом коде, что влияет на корректность генерируемого
+      в Java и JavaScript коде.</li>
+</ul>
+
+В библиотеке по умолчанию 0.0.8-й версии:
+<ul>
+  <li> Добавлены обёртки для WinAPI-функций GetUserDefaultUILanguage, SetConsoleCP, SetConsoleOutputCP
+    и добавлена установка кодировки Utf-8 для ввода и вывода в Windows.</li>
+  <li> Добавлен модуль VRead для считывания разнотипных данных из VDataStream.In</li>
+  <li> Добавлен модуль ArrayCmp для сравнения массивов байт и литер.</li>
+  <li> Добавлены процедуры VDataStream.WriteCharsWhole, Utf8.FromCode, Chars0X.Compare, VFileStream.OpenForAppend.
+  </li>
+  <li> Добавлена поддержка работы с порядком байт в числах.</li>
+  <li> Исправлена совместимость файла CFiles.js со стандартом ECMAScript 5.</li>
+  <li> Исправлена компилируемость ArrayCopy.h для некоторых компиляторов.</li>
+</ul>
+
+<p>Стоит отметить и выпуск утилиты 
+  <a href="02-19-odcey-public.html">odcey</a>, 
+  для сборки которой необходима эта версия библиотеки.</p>
+
+</body>
+</html>

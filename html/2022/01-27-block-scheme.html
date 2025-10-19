@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Блок-схемы</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Генератор блок-схем</h2>
+<p>
+  <a href="https://github.com/Vostok-space/vostok/commit/e55fd827584a006420cebb32e4a7c278afd811a3">Добавлена</a>
+  возможность преобразования модулей Оберона в блок-схемы в формате Plant UML, что позволяет получить изображение
+  в одном из многочисленных поддержанных форматов.
+</p>
+
+<!--more-->
+
+<p>Например, из такого кода:</p>
+
+<pre><code>PROCEDURE Sort*(VAR arr: ARRAY OF INTEGER);
+VAR i, j, a: INTEGER;
+BEGIN
+  FOR i := 1 TO LEN(arr) - 1 DO
+    a := arr[i];
+    j := i - 1;
+    WHILE (j >= 0) &amp; (a &lt; arr[j]) DO
+      arr[j + 1] := arr[j];
+      DEC(j)
+    END;
+    arr[j + 1] := a
+  END
+END Sort;</code></pre>
+
+<p>Можно получить изображение:</p>
+
+<div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/a/AVvXsEgciRPFJyxSV_PB-ALqZ4H6Mk-aKT23w5jnTHRpNnyzGfPByFxdGDehIMk0v9-WnukuKQOClyFPQMPB6crqXkYvnJ9JYcsN23wKF_fr8i2-jaBeSDuIKz5qAlFuRIlWbEVFZFe0L9fCM2G6hn5hOoEqW3I0SkwetaTQmd-1YcjDwznTIRzrNKP4f_ix" style="display: block; padding: 1em 0; text-align: center; "><img alt="" border="0" data-original-height="775" data-original-width="364" src="https://blogger.googleusercontent.com/img/a/AVvXsEgciRPFJyxSV_PB-ALqZ4H6Mk-aKT23w5jnTHRpNnyzGfPByFxdGDehIMk0v9-WnukuKQOClyFPQMPB6crqXkYvnJ9JYcsN23wKF_fr8i2-jaBeSDuIKz5qAlFuRIlWbEVFZFe0L9fCM2G6hn5hOoEqW3I0SkwetaTQmd-1YcjDwznTIRzrNKP4f_ix"/></a></div>
+
+<p>Plant UML не позволяет добиться максимально читаемых блок-схем для исполняемого кода, 
+  как этого можно было бы достичь при
+  ограничениях, подобных применяемым в <a href="https://drakon.su/">ДРАКОН</a>, но всё равно может служить
+  подспорьем для любителей созерцать код в виде диаграмм. 
+  К недостаткам Plant UML можно отнести и невозможность совмещать несколько разнотиповых диаграмм 
+  в одном изображении, что вынуждает к отказу
+  от более подходящей формы диаграмм объектов для декларации типов и переменных.
+</p>
+
+<p>Получение схемы доступно и в 
+  <a href="http://vostok.oberon.org/sandbox-insert-sort.html">песочнице</a>
+  через команду /TO-SCHEME
+</p>
+
+</body>
+</html>
