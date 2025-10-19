@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Обобщённый модуль</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Самое простое воплощение параметрического модуля</h2>
+
+<style>
+  pre, code { background-color: #E4E4EB; overflow: auto; color: black;}
+  pre.cmd {background-color: #E4E4E4; font-size: 0.9em; }
+  td {padding: 5px;}
+</style>
+
+<div id="img0" class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEim-4WMN-31C_eURa5HZPTeJl8xNX4emVSEjeiiI9z2yrrQomOjaQNgBHppr3_BiMePwf_DWD2D1yRwXRM2_K6xoGUu6i7V7uwNig8k5iyD0S26NCbT94pVSzs08V3D-m1seXxvOGGaI_It6UcfZLtnxucOlCoLJSNkDNo-1qa8FiJ8hUcHN7gkqCuQZfs/s1792/DALL%C2%B7E%202023-11-16%2021.11.29%20-%20The%20image%20depicts%20a%20humanoid%20robot%20resembling%20a%20traditional%20farmer,%20engaged%20in%20constructing%20a%20beautiful%20mansion%20from%20simple,%20unprocessed%20sticks.%20The%20r.png" style="display: block; padding: 1em 0; text-align: center; "><img alt="" border="0" width="600" data-original-height="1024" data-original-width="1792" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEim-4WMN-31C_eURa5HZPTeJl8xNX4emVSEjeiiI9z2yrrQomOjaQNgBHppr3_BiMePwf_DWD2D1yRwXRM2_K6xoGUu6i7V7uwNig8k5iyD0S26NCbT94pVSzs08V3D-m1seXxvOGGaI_It6UcfZLtnxucOlCoLJSNkDNo-1qa8FiJ8hUcHN7gkqCuQZfs/s600/DALL%C2%B7E%202023-11-16%2021.11.29%20-%20The%20image%20depicts%20a%20humanoid%20robot%20resembling%20a%20traditional%20farmer,%20engaged%20in%20constructing%20a%20beautiful%20mansion%20from%20simple,%20unprocessed%20sticks.%20The%20r.png"/></a></div>
+
+<div id="img1" class="separator" style="clear: both; display:none;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjE4Li-2uNqW6Vcb5zKculd9ww-Upa2pClSQoZHrsug1U-gSBnEQlx_EiDoazVoHpz-hwpso2N0bgiE1iQVmZsZns9JyNUEmey45hiNJ8F1DVd3IvxsOEysOdSyWbwKRwuwHclCtEu3UDtjp6CJv4ymfLDO9UovLuXzTzlA37etqeT8ehu0jEp-ZUuwGSA/s1792/DALL%C2%B7E%202023-11-16%2021.11.33%20-%20The%20image%20depicts%20a%20humanoid%20robot%20resembling%20a%20traditional%20farmer,%20engaged%20in%20constructing%20a%20beautiful%20mansion%20from%20simple,%20unprocessed%20sticks.%20The%20r.png" style="display: block; padding: 1em 0; text-align: center; "><img alt="" border="0" width="600" data-original-height="1024" data-original-width="1792" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjE4Li-2uNqW6Vcb5zKculd9ww-Upa2pClSQoZHrsug1U-gSBnEQlx_EiDoazVoHpz-hwpso2N0bgiE1iQVmZsZns9JyNUEmey45hiNJ8F1DVd3IvxsOEysOdSyWbwKRwuwHclCtEu3UDtjp6CJv4ymfLDO9UovLuXzTzlA37etqeT8ehu0jEp-ZUuwGSA/s600/DALL%C2%B7E%202023-11-16%2021.11.33%20-%20The%20image%20depicts%20a%20humanoid%20robot%20resembling%20a%20traditional%20farmer,%20engaged%20in%20constructing%20a%20beautiful%20mansion%20from%20simple,%20unprocessed%20sticks.%20The%20r.png"/></a></div>
+
+<div id='img2' class="separator" style="clear: both; display:none;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgcv6g-Rvo99IuDjf943l3EEib6SJOOIxVgf2wAdmeu6OS1VbSUsZywooyh-51kMIvnETsBxm8t7N01Z0oQifxV3cBmmxCc20J4yPDCx6tqcgHIQ9FXtmvGGXTtnlan335QlCHxWFeBedMmdTcbWYtlk9TgYrNjM6X6Fns-Cou3jaG3tSNQPn1d2Wu4En0/s1792/DALL%C2%B7E%202023-11-17%2013.02.37%20-%20The%20image,%20in%20a%2016_9%20aspect%20ratio,%20features%20a%20Soviet%20collective%20farm%20woman%20%28kolhoznitsa%29%20in%20a%20barn,%20assembling%20a%20model%20of%20the%20%27Vostok-1%27%20rocket%20and%20it.png" style="display: block; padding: 1em 0; text-align: center; "><img alt="" border="0" width="600" data-original-height="1024" data-original-width="1792" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgcv6g-Rvo99IuDjf943l3EEib6SJOOIxVgf2wAdmeu6OS1VbSUsZywooyh-51kMIvnETsBxm8t7N01Z0oQifxV3cBmmxCc20J4yPDCx6tqcgHIQ9FXtmvGGXTtnlan335QlCHxWFeBedMmdTcbWYtlk9TgYrNjM6X6Fns-Cou3jaG3tSNQPn1d2Wu4En0/s600/DALL%C2%B7E%202023-11-17%2013.02.37%20-%20The%20image,%20in%20a%2016_9%20aspect%20ratio,%20features%20a%20Soviet%20collective%20farm%20woman%20%28kolhoznitsa%29%20in%20a%20barn,%20assembling%20a%20model%20of%20the%20%27Vostok-1%27%20rocket%20and%20it.png"/></a></div>
+
+<script>
+  (function() {
+    var r, id;
+    r = Math.random();
+    if (r < 0.3) {
+      document.getElementById('img0').style.display = 'none';
+      id = 'img' + Math.floor(1 + r * 6.6);
+      document.getElementById(id).style.display = '';
+    }
+  })();
+</script>
+
+<p>Если нужно использовать модули, параметризированные по ряду объявлений (generics, шаблоны), то в оригинальном Oberon, как и в Modula-2, это всегда было достижимо в некотором виде за счёт самой модульности, требуя, впрочем, расширенного понимания, что стоит за IMPORT. В минимальном варианте для этого достаточно простых средств даже без поддержки со стороны основных инструментов. Этот способ не идеален и позволяет сделать не всё, но и совсем плохим его не назовёшь — в нём не используется никаких опасных и сомнительных средств. Конечно, при очень плотном использовании обобщённых типов лучше внести соответствующие изменения в язык, а ещё лучше перепроектировать его с 0<a href='#[0]'>[0]</a>. Если шаблоны нужны как вспомогательный механизм, то этот подход может оказаться даже лучше других.</p>
+
+<p>Здесь представлен схематичный пример. Дополнительные детали воплощения для достижения нужных качеств представить несложно.</p>
+
+<!--more-->
+
+«Параметризированный» модуль может ничем не отличаться от обычного модуля, так как все необходимые объявления он берёт из импортированного модуля, служащего ему параметром:
+<pre><code>MODULE List; IMPORT <b>Param</b>;
+
+ TYPE 
+  T* = POINTER TO R;
+  R = RECORD
+    next: T;
+    val*: <b>Param</b>.T
+  END;
+
+ PROCEDURE Insert*(VAR list: T; val: <b>Param</b>.T);
+ VAR l: T;
+ BEGIN
+  NEW(l);
+  l.next := list;
+  l.val  := val;
+  list   := l
+ END Insert;
+
+ PROCEDURE Next*(VAR item: T): BOOLEAN;
+ BEGIN
+  item := item.next
+ RETURN
+  item # NIL
+ END Next;
+
+END List.
+</code></pre>
+
+<p>Следующий исходный(формальный) параметр-модуль не только служит заготовкой для фактических параметров-модулей, но также позволяет напрямую использовать исходный список как динамически типизированный, что тоже имеет смысл:</p>
+<pre><code>MODULE <b>Param</b>; IMPORT V;
+ TYPE T* = POINTER TO V.Base;
+END <b>Param</b>.
+</code></pre>
+
+
+<p>Фактический параметр-модуль с нужными объявлениями:</p>
+<pre><code>MODULE <b>ParamRec</b>;
+ TYPE T* = RECORD r*: REAL; i*: INTEGER END;
+END <b>ParamRec</b>.
+</code></pre>
+<p>При должном обобщённом подходе модули-параметры могут использоваться вместе с разными параметризированными модулями.</p>
+
+<p>Для получения фактического модуля для конкретного типа необходимо специализировать обобщённый модуь, связав его с фактическим параметром-модулем через IMPORT. Код для специализации модуля где-то в сборочной системе<a href='#[1]'>[1]</a>:</p>
+<pre class='cmd'>FileTool.Replace("List.mod", "ListRec.mod",
+  "'MODULE List;'->'MODULE ListRec', 'END List.'->'END ListRec.', 'IMPORT <b>Param</b>'->'IMPORT <b>Param</b> := <b>ParamRec</b>'")
+</pre>
+<details><summary>Для POSIX-shell</summary>
+  <p>ChatGPT4 понял смысл FileTool.Replace и предложил такой работающий код:</p>
+  <pre><code>modspec() { sed -e "s/MODULE $1;/MODULE $2;/g" -e "s/END $1\./END $2\./g" -e "s/IMPORT $3/IMPORT $3 := $4/g" "$1.mod" > "gen/$2.mod"; }
+modspec List ListRec Param ParamRec</code></pre>
+</details>
+
+<p>Эта команда показывает возможность нулевого воплощения, в котором обобщенные модули используются без какой-либо специализированной поддержки, задействуя исключительно общеприменимые инструменты. Гипотетически, при наличии отдельных утилит или поддержки со стороны самого транслятора специализация может<a href='#[2]'>[2]</a> выглядеть так:</p>
+
+<pre class='cmd'>Modules.Spec("ListRec := List(<b>Param</b> := <b>ParamRec</b>)")</pre>
+
+
+<p>Использование специализированного модуля:</p>
+<pre><code>MODULE UseList;
+
+ IMPORT ListRec, Rec := ParamRec, log;
+
+ PROCEDURE Go*;
+ VAR list, item: ListRec.T; v: Rec.T;
+ BEGIN
+  list := NIL;
+
+  v.i := 1; v.r := 2.3;  ListRec.Insert(list, v);
+  v.i := 0; v.r := 1.2;  ListRec.Insert(list, v); 
+
+  item := list;
+  REPEAT
+    log.i(item.val.i); log.s(" "); log.rn(item.val.r)
+  UNTIL ~ListRec.Next(item)
+
+ END Go;
+
+END UseList.
+</code></pre>
+
+<p>Весь код в <a href='https://vostok.oberon.org/sandbox.html?view=36fnga6vx46g-ListGeneric'>песочнице</a>.</p>
+
+<table>
+  <tr><th>Достоинства</th><th>Недостатки</th></tr>
+  <tr><td>0 изменений языка</td><td>Неочевидность внеязыковых средств</td></tr>
+  <tr><td>Простейшее воплощение</td><td>Меньшее удобство использования</td></tr>
+  <tr><td>Эффективное по скорости</td><td>В простейшем воплощении раздувание сгенерированного кода там, где этого можно избежать</td></tr>
+  <tr><td>Без применения опасных средств</td><td>Суженная область применения</td></tr>
+  <tr><td></td><td>Невозможно параметризовать по внутренним неимпортированным объявлениям</td></tr>
+</table>
+
+<p>При поддержке таких обобщённых модулей со стороны транслятора избыточного раздувания сгенерированного кода можно избежать. Изменений в языке для этого по-прежнему не требуется.</p>
+
+<br/>
+<h3>Примечания:</h3>
+<a id='[0]' href='#[0]'>[0]</a> Обобщённые типы — это не то, что можно гармонично внести в уже устоявшийся язык, поскольку это свойство лежит где-то в основах языка. Например, <code>ARRAY count OF Type</code> — это предопределённый обобщённый тип в Oberon. Если же язык позволяет создавать новые обобщённые типы, то и массивы желательно выразить в этих терминах, а не оставлять в виде отдельной специальной сущности.<br/>
+
+<a id='[1]' href='#[1]'>[1]</a> Специализация модуля в сборочной системе означает, что если это и приводит к появлению дополнительного файла, что само по себе не обязательно, то он оказывается лишь внутренним делом самой сборочной системы как промежуточные данные перед трансляцией. Такой файл не должен помещаться рядом с исходным кодом как локально, так и в репозитории, и нет необходимости его редактировать.<br/>
+
+<a id='[2]' href='#[2]'>[2]</a> В целом, такая специализация подходит как частный случай маршрутизации модулей, которая способна решать куда больше задач.
+
+</body>
+</html>

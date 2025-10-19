@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Проверяемый SYSTEM</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Проверяемые адреса при работе с SYSTEM</h2>
+
+<div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj7bsH3Y_iEfWRmWE4skabel8573YxdLb5I6-Dj5pEay2dDqKYY0zeM9bxzcmOov8UafaGyY8Vui4nQs6uYEYA-OW3dluii6_KerwsPhzpk03b1h6PXaCB6OwfHRlCk-0r6EhKW5t7L2I0CXX5ISlH9naqIeirzyN5G75dwBxgrT0JTjRHKEnX47tF9qNw/s1024/DALL%C2%B7E%202023-11-20%2012.30.37%20-%20A%20metal%20cabinet%20filled%20with%20books,%20with%20a%20drawing%20of%20a%20sledgehammer%20on%20a%20sheet%20of%20paper%20on%20the%20floor.%20The%20metal%20cabinet%20is%20sturdy%20and%20full%20of%20various%20.png" style="display: block; padding: 0 1em; text-align: center; clear: right; float: right;"><img alt="" border="0" width="400" data-original-height="1024" data-original-width="1024" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj7bsH3Y_iEfWRmWE4skabel8573YxdLb5I6-Dj5pEay2dDqKYY0zeM9bxzcmOov8UafaGyY8Vui4nQs6uYEYA-OW3dluii6_KerwsPhzpk03b1h6PXaCB6OwfHRlCk-0r6EhKW5t7L2I0CXX5ISlH9naqIeirzyN5G75dwBxgrT0JTjRHKEnX47tF9qNw/s400/DALL%C2%B7E%202023-11-20%2012.30.37%20-%20A%20metal%20cabinet%20filled%20with%20books,%20with%20a%20drawing%20of%20a%20sledgehammer%20on%20a%20sheet%20of%20paper%20on%20the%20floor.%20The%20metal%20cabinet%20is%20sturdy%20and%20full%20of%20various%20.png"/></a></div>
+<p>
+  <a href='https://github.com/Vostok-space/vostok/commit/597811d42b6b799d20b7f3134b06f94d0199b108'>Добавлено</a>
+  свойство проверяемости при работе с низкоуровневыми адресами в процедурах из <a href="../../2021/12/system.html">SYSTEM</a> — ADR, BIT, GET, PUT, COPY.</p>
+
+<ul>
+  <li>Проверка выхода за границы адресуемого объекта.</li>
+  <li>Проверка обращения к локальным объектам после выхода из содержащих их процедуры.</li>
+  <li>Проверка разрешённости записи в соответствии с правилами языка.</li>
+  <li>Запрет получения адреса от переменной, содержащей указатели.</li>
+</ul>
+
+<p>Подход показывает возможность отказа от принципа «всё или ничего» в отношении безопасности указателей. В таком воплощении низкоуровневая адресация позволяет обойти типизацию в тех случаях, когда это может быть необходимо, но не предоставляет произвольный грубый доступ ко всей памяти, не позволяя также нарушить многие гарантии исходного языка, и помогая избежать ряда уязвимостей<a href='#[0]'>[0]</a>. Правильный код, написанный под такое воплощение SYSTEM будет правилен и для бесконтрольного обращения к памяти. Обратное, естественно, верно не всегда.</p>
+
+<!--more-->
+
+<p>Адрес, напрямую хранимый как 32-битный INTEGER, не предоставляет возможности осуществлять такие проверки, поэтому применяется косвенность. Сам адрес в старших разрядах хранит индекс от кольцевой таблицы, в которой сохранены обычные указатели и связанные с ними сведения, включая размер объекта. В младших разрядах хранится смещение от базового адреса, что позволяет проводить адресную арифметику так же, как в обычной бесконтрольной адресации, но в пределах объекта. Старые адреса по мере вызова SYSTEM.ADR приходят в негодность. Части диапазонов обеих частей адреса зарезервированы для вероятностного выявления выхода за пределы применимости. Адреса локальных объектов перед завершением процедуры помечаются как устаревшие. Параметры процедуры, ссылающиеся на глобальные объекты, всё равно считаются локальными.</p>
+
+<p>Так как косвенность позволяет работать с указателями любой размерности, то теперь работа с псевдомодулем SYSTEM  доступна не только для 32-битных указателей, но и для 64-битных и для более экзотичных, подобных 128-битным указателям Эльбруса в защищённом режиме.</p>
+<br/>
+<a id='[0]' href='#[0]'>[0]</a> Пример на
+  <a href='https://forum.oberoncore.ru/viewtopic.php?f=2&t=2006#p104487'>forum.oberoncore.ru</a>
+  возможного нарушения памяти при использовании SYSTEM из-за неточной проверки входных параметров.<br/>
+
+<a id='[1]' href='#[1]'>[1]</a> Более полный подход к обеспечению целостности памяти в Oberon — 
+<a href='https://github.com/Vostok-space/oberon-proposal/blob/main/безопасно-по-памяти.md'>github/vostok-space/безопасно-по-памяти.md</a>
+
+</body>
+</html>

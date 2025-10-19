@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Пересечение ссылок</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Проверка пересечений ссылочных параметров в Oberon</h2>
+
+<div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiqX72SN4m-Pf5QzCJzNgj9qLXo_zxCL76inO4QAoO3OSMkW728yaIDUuGMy0-bFuDQYvB0L-fFEe2IfZTPRBCKgcxLEo-yirjp2m7QNw5wsahEO07PQEcV9KH7yOsbqtYhFbA8tm7mN1uCw0KTXgdYDCtXVzjITM7MmSevpVeg6HL5g6mw8iLbCXclV1I/s1024/DALL%C2%B7E%202023-12-06%2022.51.48%20-%20A%20surreal%20and%20subtle%20scene%20showing%20a%20man%20standing%20in%20front%20of%20a%20mirror.%20The%20man%20is%20of%20Caucasian%20descent%20with%20short%20brown%20hair%20and%20has%20a%20less%20expressiv.png" style="display: block; padding: 0 2em; text-align: center; clear: right; float: right;"><img alt="" border="0" width="200" data-original-height="1024" data-original-width="1024" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiqX72SN4m-Pf5QzCJzNgj9qLXo_zxCL76inO4QAoO3OSMkW728yaIDUuGMy0-bFuDQYvB0L-fFEe2IfZTPRBCKgcxLEo-yirjp2m7QNw5wsahEO07PQEcV9KH7yOsbqtYhFbA8tm7mN1uCw0KTXgdYDCtXVzjITM7MmSevpVeg6HL5g6mw8iLbCXclV1I/s200/DALL%C2%B7E%202023-12-06%2022.51.48%20-%20A%20surreal%20and%20subtle%20scene%20showing%20a%20man%20standing%20in%20front%20of%20a%20mirror.%20The%20man%20is%20of%20Caucasian%20descent%20with%20short%20brown%20hair%20and%20has%20a%20less%20expressiv.png"/></a></div>
+
+<p>В языке Oberon можно передавать переменные через ссылочные параметры процедур — параметры-значения<a href='#[0]'>[0]</a> и параметры-переменные. Это удобно, потому что позволяет передавать ссылки на данные без обязательного размещения их в динамической памяти. Если же данные всё равно динамические, существует гарантия неутекания значений указателей с возможным побочным доступом к данным уже после вызова процедуры.</p>
+
+<p>Но иногда возникает потребность в проверке того, не являются ли однотипные параметры на самом деле одним и тем же элементом, что может вызвать затруднение, так как в отличии от указателей сравнения параметров-ссылок в Oberon не предусмотрено. А это может быть важно, если как минимум один параметр — переменный(VAR), и его изменение может привести к нежелательному изменению другого параметра.</p>
+
+<!--more-->
+
+<style>
+  pre, code { background-color: #E4E4EB; overflow: auto; color: black;}
+  pre.cmd {background-color: #E4E4E4; font-size: 0.9em; }
+  td {padding: 5px;}
+</style>
+
+<pre><code>PROCEDURE Reverse(VAR dest: ARRAY OF INTEGER; src: ARRAY OF INTEGER);
+VAR i: INTEGER;
+BEGIN    ASSERT(LEN(dest) = LEN(src));
+ FOR i := 1 TO LEN(src) DO
+   dest[i - 1] := src[LEN(src) - i]
+ END
+END Reverse;
+</code></pre>
+
+<p>После вызова такой процедуры с одним и тем же массивом в качестве исходного и целевого параметра его значение в общем случае окажется испорченным. Для выбора другой логики или остановки некорректного выполнения можно было бы проверять адреса с помощью SYSTEM:</p>
+
+<pre><code>ASSERT(SYSTEM.ADR(dest) # SYSTEM.ADR(src))</code></pre>
+
+<p>Но SYSTEM является опасным опциональным модулем, нежелательным для простого использования. И способ непереносим — он не пригоден, например, при трансляции в Java и JavaScript. Однако возможна безопасная и переносимая проверка, хотя и более изощрённая. Достаточно выявления связанного изменения параметров.</p>
+
+<pre><code>PROCEDURE CheckByChange*(c: ARRAY OF INTEGER; VAR d: INTEGER): BOOLEAN;
+VAR i, save: INTEGER; same: BOOLEAN;
+BEGIN
+ save := c[0];
+ i := 1 - c[0] MOD 2; (* безопасное гарантированное изменение *)
+ d[0] := i;
+ same := c[0] = i;
+ IF same THEN d[0] := save END
+RETURN
+ same
+END CheckByChange;
+
+PROCEDURE Check*(c: ARRAY OF INTEGER; VAR d: ARRAY OF INTEGER): BOOLEAN;
+RETURN
+ (LEN(d) = LEN(c)) &amp; CheckByChange(c, d[0])
+END Check;</code></pre>
+
+<p><a href='https://vostok.oberon.org/sandbox.html?view=6wif5e0c3i4p-SameVar'>Код в песочнице</a>
+  и <a href='https://online.oberon.org/model/418'>ещё одной</a>.<p>
+  
+<p>Процедура, умеющая работать с совпадающими фактическими параметрами-массивами:</p>
+<pre><code>PROCEDURE Reverse(VAR dest: ARRAY OF INTEGER; src: ARRAY OF INTEGER);  VAR i: INTEGER;
+<details><summary>PROCEDURE Swap(VAR d: ARRAY OF INTEGER; i, k: INTEGER);</summary>  VAR t: INTEGER;
+  BEGIN
+   t := d[i]; d[i] := d[k]; d[k] := t
+  END Swap;
+</details>BEGIN    ASSERT(LEN(dest) = LEN(src));
+ i := src[0]; dest[0] := 1 - i MOD 2;
+ IF src[0] # i THEN 
+   dest[0] := i;
+   FOR i := LEN(src) DIV 2 TO 1 BY -1 DO
+     Swap(dest, i - 1, LEN(dest) - i)
+   END
+ ELSE
+   FOR i := 1 TO LEN(src) DO dest[i - 1] := src[LEN(src) - i] END
+ END
+END Reverse;</code></pre>
+
+<p>Для менее явно выраженных пересечений этот способ не подходит из-за ресурсоёмкости:</p>
+<pre><code>PROCEDURE Do(VAR res: INTEGER; VAR data: ARRAY OF INTEGER);
+...
+Do(data[rand], data)</code></pre>
+
+<p>Но и происходят такие пересечения чаще от злой воли автора кода, чем от простой случайности.</p>
+
+<h3>Примечания:</h3> 
+<a href='#[0]' id='[0]'>[0]</a> Параметры-значения будут ссылочными только для структур — массивов и записей.
+<br/>
+
+</body>
+</html>
