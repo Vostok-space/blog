@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>She-bang</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>She-bang для Oberon</h2>
+<div>
+  <style>
+    pre, code { 
+      background-color: #EEE
+    }
+  </style>
+<p>
+  В операционной системе Oberon в качестве скриптового языка используется одноимённый язык, на котором
+  написана сама ОС, что в духе минимализма всей системы в целом и языка в частности.
+  Для транслятора "Восток" я воплотил схожий способ запуск команд из модулей.
+  Но если в ОС Оберон для запуска команды достаточно клика мыши на
+  записи, состоящей из имени модуля, точки и имени экспортированной процедуры, например</p>
+  <pre>Hello.Come</pre>
+  <details>
+    <summary>текст модуля</summary>  
+    <pre>MODULE Hello;
+  IMPORT Out;
+  
+  PROCEDURE Come*;
+  BEGIN
+    Out.String("Hello"); Out.Ln
+  END Come;
+  
+  PROCEDURE Gone*;
+  BEGIN
+    Out.String("Bye"); Out.Ln
+  END Gone;
+END Hello.</pre>
+  </details>
+  <p>то для запуска в GNU/Linux требуется запись такого рода в командной оболочке</p>
+  <pre>result/o7c run Hello.Come -infr . -m example</pre>
+  <p>Так как установка ранее не была предусмотрена, то требовалось указывать полное имя транслятора и
+  пути к основным библиотекам.
+</p>
+<p>
+  Как показал опыт, некоторые люди даже знакомые с принципами ОС Оберон без чтения справки ожидали от
+  транслятора поведения, схожего с компиляторами Си, которые работают с кодом в файлах, то есть, чего-то
+  такого</p> <pre>result/o7c run example/Hello.mod -infr .</pre>
+<p>
+  Я, наконец, решил улучшить интеграцию с GNU/Linux. Сначала добавил возможность установки с использованием
+  в трансляторе пути к основным библиотекам по умолчанию. Для этого я внёс соответствующие изменения в код
+  и добавил процедуры Install, InstallTo, Remove, RemoveFrom в сборочный модуль make.mod.
+  Заодно переименовал
+  исполняемый файл из o7c(Oberon-7 compiler) в ost(Oberon-seven translator). 
+  Чтобы установить транслятор нужно
+  выполнить команду:</p>
+  <pre>/usr/bin/sudo result/ost run make.Install -infr . -m source</pre>
+  <p>После установки станет возможным запускать модули так:</p>
+  <pre>ost run Hello.Come -m example</pre>
+<p>  Следующим шагом я добавил режим запуска модуля с указанием одноимённого файла, в котором он находится</p>
+  <pre>ost .Come example/Hello.mod</pre>
+  <pre>ost . example/Hello.mod Come</pre>
+  <details>
+    <summary>Если же автор поместил код для выполнения в секцию инициализации модуля,
+      то запуск ещё упрощается
+    </summary>
+    <pre>MODULE Hello;<br />  IMPORT Out;<br />BEGIN<br />  Out.String("Hello"); Out.Ln<br />END Hello.</pre>   
+  </details>
+  <pre>ost example/Hello.mod</pre>
+<p>Мне такой подход не нравится, так как снижает гибкость запуска и требует написания разбора
+  текстовых аргументов программы там, где может быть достаточно создания разных экспортированных
+  процедур в коде модуля, но некоторым нравится из-за краткости.
+</p>
+<p>
+  Для всех типов запуска с указанием файла теперь есть возможность задействовать особенность POSIX систем -
+  she-bang, позволяющий запускать скрипты любого языка без привязки иполнителя по расширению файла.
+  Например:</p>
+  <pre>#!/usr/bin/env -S ost .
+Так как код на Обероне не привязан к понятию файла, а имеет чёткие границы,
+то за пределами модуля можно писать разный текст, в том числе и she-bang
+MODULE Hello;
+  IMPORT Out;
+
+  PROCEDURE Come*;
+  BEGIN
+    Out.String("Привет."); Out.Ln
+  END Come;
+
+  PROCEDURE Gone*;
+  BEGIN
+    Out.String("Бывай."); Out.Ln
+  END Gone;
+
+END Hello.</pre>
+  <p>После придания файлу атрибута исполнимости:</p>
+  <pre>chmod +x example/Hello.mod</pre>
+  <p>Его можно запускать без обращения к транслятору напрямую:</p>
+  <pre>example/Hello.mod Come
+Привет.
+example/Hello.mod Gone
+Бывай.</pre>
+</div>
+
+</body>
+</html>

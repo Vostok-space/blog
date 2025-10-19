@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>deb - пакеты</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>deb - пакеты</h2>
+<style>pre { overflow:auto; } </style>
+<div>
+ <p>
+  <a href="https://github.com/Vostok-space/vostok/commit/0974bdbb846906e4ba316e14107ab6e5ba06e4d0">Добавил</a>
+  возможность сборки
+  <a href="https://ru.wikipedia.org/wiki/Deb_(%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%82_%D1%84%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2)">deb-пакетов</a> 
+  для предоставления пользователю GNU/Linux более удобного способа установки транслятора.
+ </p>
+ <p>
+  Текущая сборка разбивается на 2-е части - исполняемый файл транслятора и первоначальная библиотека поддержки.
+  Из-за того, что библиотека на текущем уровне развития доступна только на уровне исходного кода, то она не
+  зависит от процессорной платформы. Транслятор же для повышения универсальности собирается для i386 со
+  статическим связыванием со стандартной библиотекой. Если для этого вместо glibc использовать musl-libc или
+  dietlibc, то размер выходного файла получается вполне приемлемым.
+ </p>
+ <p>
+  Для такой сборки я использовал следующую команду в каталоге проекта из 32-битной Ubuntu 18.04:
+ </p>
+<pre>$ result/bs-ost run 'make.UseCC("musl-gcc -Os -flto -static"); make.Build; make.Deb' -infr . -m source</pre>  
+  Предварительно нужно установить вспомогательные утилиты:
+  <pre>$ /usr/bin/sudo apt install hashdeep musl-tools </pre>
+  И собрать раскруточную версию транслятора:
+  <pre>$ ./init.sh </pre>
+
+  Под командой make.Deb скрываются команды оболочки sh:
+  <details>
+    <summary>для сборки vostok-deflib.deb</summary>
+    <pre>rm -r result/vostok-deflib
+mkdir -p result/vostok-deflib result/vostok-deflib/DEBIAN \
+  result/vostok-deflib/usr/share/doc/vostok-deflib result/vostok-deflib/usr/share/vostok
+cp -r library result/vostok-deflib/usr/share/vostok/
+cp -r singularity result/vostok-deflib/usr/share/vostok/
+cp package/DEBIAN/control-deflib result/vostok-deflib/DEBIAN/control
+gzip -9cn package/DEBIAN/changelog-deflib > \
+  result/vostok-deflib/usr/share/doc/vostok-deflib/changelog.gz
+cp package/DEBIAN/copyright-deflib result/vostok-deflib/usr/share/doc/vostok-deflib/copyright
+cd result/vostok-deflib
+md5deep -rl usr > DEBIAN/md5sums
+cd ..
+fakeroot dpkg-deb --build vostok-deflib
+</pre>
+  </details>
+
+  <details>
+    <summary>для сборки vostok-bin.deb</summary>
+    <pre>rm -r result/vostok-bin
+mkdir -p result/vostok-bin/DEBIAN result/vostok-bin/usr/share/doc/vostok-bin result/vostok-bin/usr/bin
+cp result/ost result/vostok-bin/usr/bin/
+cp package/DEBIAN/control-bin result/vostok-bin/DEBIAN/control
+gzip -9cn package/DEBIAN/changelog-bin > result/vostok-bin/usr/share/doc/vostok-bin/changelog.gz
+cp package/DEBIAN/copyright-bin result/vostok-bin/usr/share/doc/vostok-bin/copyright
+cp package/DEBIAN/ost.1 result/vostok-bin/DEBIAN/ost.1
+cd result/vostok-bin
+md5deep -rl usr > DEBIAN/md5sums
+cd ..
+fakeroot dpkg-deb --build vostok-bin
+</pre>
+  </details>
+
+ <p> 
+  В результате сотрудничества с другими проектами на Обероне, deb-пакеты и их обновления доступны в общем 
+  репозитории <a href="https://wiki.oberon.org/repo">https://wiki.oberon.org/repo</a>
+ </p>
+</div>
+
+</body>
+</html>

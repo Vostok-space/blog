@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Привязка к C++</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Проба создания привязки к коду на C++</h2>
+<div>
+  <style>
+    pre {
+      background-color: #F0F0F0;
+    }
+  </style>
+ <p> Для примера я взял открытую C++ библиотеку <a href='https://github.com/openbabel/openbabel'>Open Babel</a> 
+     для работы с моделями молекул. API библиотеки необъятно, поэтому решено было сделать только ту привязку,
+     которая необходима для тестовой задачи — чтения молекулы из файла и вывод координат её атомов. 
+     Так как для ввода Open Babel использует стандартные классы С++, то в привязку было добавлены функции 
+     открытия и закрытия std::ifstream
+ </p>
+
+<!--more-->
+
+ <p> Для удобства использования я создал структуру каталогов для привязки: </p>
+<pre class="notranslate" translate="no">$ mkdir -p openbabel/singularity/definition openbabel/implementation</pre>
+     В таком виде библиотеку проще подключать к транслятору ключом <code>-infr openbabel</code>
+
+ <p> Где создал интерфейсный модуль на Обероне <code>openbabel/singularity/definition/OpenBabel.mod</code>: </p>
+   <pre class="notranslate" translate="no">MODULE OpenBabel;
+
+  TYPE
+    Atom      * = POINTER TO RECORD END;
+    Mol       * =            RECORD END;
+    Conversion* =            RECORD END;
+    Ifstream  * = POINTER TO RECORD END;
+
+  PROCEDURE Open*(name: ARRAY OF CHAR): Ifstream;
+  BEGIN
+    ASSERT(name # "");
+  RETURN
+    NIL
+  END Open;
+
+  PROCEDURE Close*(VAR s: Ifstream);
+  BEGIN
+    s := NIL
+  END Close;
+
+  PROCEDURE SetInFormat*(VAR c: Conversion; fmt: ARRAY OF CHAR): BOOLEAN;
+  RETURN FALSE
+  END SetInFormat;
+
+  PROCEDURE Read*(VAR m: Mol; VAR c: Conversion; in: Ifstream): BOOLEAN;
+  RETURN
+    FALSE
+  END Read;
+
+  PROCEDURE GetAtom*(m: Mol; idx: INTEGER): Atom;
+  RETURN
+    NIL
+  END GetAtom;
+
+  PROCEDURE GetVector*(a: Atom; VAR v: ARRAY OF REAL);
+  BEGIN
+    ASSERT(LEN(v) >= 3);
+    ASSERT(FALSE)
+  END GetVector;
+
+END OpenBabel.</pre>
+
+
+ <p>Транслировал его в Си-код</p>
+<pre class="notranslate" translate="no">$ ost to-c OpenBabel openbabel/singularity/implementation -m openbabel/singularity/definition</pre>
+   <details><summary>Получив такие два файла-болванки для вставки кода:</summary>
+    <ol>
+      <li> openbabel/singularity/implementation/OpenBabel.h
+<pre class="notranslate">#if !defined HEADER_GUARD_OpenBabel
+#    define  HEADER_GUARD_OpenBabel 1
+
+typedef struct OpenBabel_Atom__s { char nothing; } *OpenBabel_Atom;
+#define OpenBabel_Atom__s_tag o7_base_tag
+
+extern void OpenBabel_Atom__s_undef(struct OpenBabel_Atom__s *r);
+typedef struct OpenBabel_Mol { char nothing; } OpenBabel_Mol;
+#define OpenBabel_Mol_tag o7_base_tag
+
+extern void OpenBabel_Mol_undef(struct OpenBabel_Mol *r);
+typedef struct OpenBabel_Conversion { char nothing; } OpenBabel_Conversion;
+#define OpenBabel_Conversion_tag o7_base_tag
+
+extern void OpenBabel_Conversion_undef(struct OpenBabel_Conversion *r);
+typedef struct OpenBabel_Ifstream__s { char nothing; } *OpenBabel_Ifstream;
+#define OpenBabel_Ifstream__s_tag o7_base_tag
+
+extern void OpenBabel_Ifstream__s_undef(struct OpenBabel_Ifstream__s *r);
+
+extern struct OpenBabel_Ifstream__s *OpenBabel_Open(o7_int_t name_len0, o7_char name[/*len0*/]);
+
+extern void OpenBabel_Close(struct OpenBabel_Ifstream__s **s);
+
+extern o7_bool OpenBabel_SetInFormat(struct OpenBabel_Conversion *c, o7_int_t fmt_len0, o7_char fmt[/*len0*/]);
+
+extern o7_bool OpenBabel_Read(struct OpenBabel_Mol *m, struct OpenBabel_Conversion *c, struct OpenBabel_Ifstream__s *in_);
+
+extern struct OpenBabel_Atom__s *OpenBabel_GetAtom(struct OpenBabel_Mol *m, o7_int_t idx);
+
+extern void OpenBabel_GetVector(struct OpenBabel_Atom__s *a, o7_int_t v_len0, double v[/*len0*/]);
+
+extern void OpenBabel_init(void);
+#endif</pre>
+      <li> openbabel/singularity/implementation/OpenBabel.c
+<pre>#include &lt;o7.h>
+
+#include "OpenBabel.h"
+
+#define OpenBabel_Atom__s_tag o7_base_tag
+extern void OpenBabel_Atom__s_undef(struct OpenBabel_Atom__s *r) {
+}
+#define OpenBabel_Mol_tag o7_base_tag
+extern void OpenBabel_Mol_undef(struct OpenBabel_Mol *r) {
+}
+#define OpenBabel_Conversion_tag o7_base_tag
+extern void OpenBabel_Conversion_undef(struct OpenBabel_Conversion *r) {
+}
+#define OpenBabel_Ifstream__s_tag o7_base_tag
+extern void OpenBabel_Ifstream__s_undef(struct OpenBabel_Ifstream__s *r) {
+}
+
+extern struct OpenBabel_Ifstream__s *OpenBabel_Open(o7_int_t name_len0, o7_char name[/*len0*/]) {
+ O7_ASSERT(o7_strcmp(name_len0, name, 0, (o7_char *)"") != 0);
+ return NULL;
+}
+
+extern void OpenBabel_Close(struct OpenBabel_Ifstream__s **s) {
+ (*s) = NULL;
+}
+
+extern o7_bool OpenBabel_SetInFormat(struct OpenBabel_Conversion *c, o7_int_t fmt_len0, o7_char fmt[/*len0*/]) {
+ return (0 > 1);
+}
+
+extern o7_bool OpenBabel_Read(struct OpenBabel_Mol *m, struct OpenBabel_Conversion *c, struct OpenBabel_Ifstream__s *in_) {
+ return (0 > 1);
+}
+
+extern struct OpenBabel_Atom__s *OpenBabel_GetAtom(struct OpenBabel_Mol *m, o7_int_t idx) {
+ return NULL;
+}
+
+extern void OpenBabel_GetVector(struct OpenBabel_Atom__s *a, o7_int_t v_len0, double v[/*len0*/]) {
+ O7_ASSERT(v_len0 >= 3);
+ O7_ASSERT((0 > 1));
+}
+
+extern void OpenBabel_init(void) {
+ static unsigned initialized = 0;
+ if (0 == initialized) {
+
+ }
+ ++initialized;
+}</pre>
+    </ol>
+   </details>
+
+ <p> Для уменьшения накладных расходов на привязку я избавился от .c файла, оставив только заголовочный файл, 
+     пометив его функции как встраиваемые и наполнив нужным кодом </p>
+<pre class="notranslate">#if !defined HEADER_GUARD_OpenBabel
+#    define  HEADER_GUARD_OpenBabel 1
+
+#include &lt;iostream>
+#include &lt;fstream>
+
+#include &lt;openbabel/mol.h>
+#include &lt;openbabel/obconversion.h>
+
+typedef struct OpenBabel_Atom__s { OpenBabel::OBAtom a; } *OpenBabel_Atom;
+#define OpenBabel_Atom__s_tag o7_base_tag
+O7_ALWAYS_INLINE void OpenBabel_Atom__s_undef(OpenBabel_Atom *r) {}
+
+typedef struct OpenBabel_Mol { OpenBabel::OBMol m; } OpenBabel_Mol;
+#define OpenBabel_Mol_tag o7_base_tag
+O7_ALWAYS_INLINE void OpenBabel_Mol_undef(OpenBabel_Mol *r) {}
+
+typedef struct OpenBabel_Conversion { OpenBabel::OBConversion c; } OpenBabel_Conversion;
+#define OpenBabel_Conversion_tag o7_base_tag
+O7_ALWAYS_INLINE void OpenBabel_Conversion_undef(OpenBabel_Conversion *r) {}
+
+typedef struct OpenBabel_Ifstream__s { std::ifstream s; } *OpenBabel_Ifstream;
+#define OpenBabel_Ifstream__s_tag o7_base_tag
+O7_ALWAYS_INLINE void OpenBabel_Ifstream__s_undef(OpenBabel_Ifstream *r) {}
+
+O7_ALWAYS_INLINE OpenBabel_Ifstream OpenBabel_Open(o7_int_t len, o7_char name[/*len*/]) {
+    OpenBabel_Ifstream f;
+
+    O7_ASSERT(name[0] != 0);
+
+    f = (OpenBabel_Ifstream)new std::ifstream((char *)name);
+    return f;
+}
+
+O7_ALWAYS_INLINE void OpenBabel_Close(OpenBabel_Ifstream *s) {
+    O7_ASSERT(*s != NULL);
+    ((std::ifstream *)(*s))->close();
+    delete (std::ifstream *)*s;
+    *s = NULL;
+}
+
+O7_ALWAYS_INLINE o7_bool 
+OpenBabel_SetInFormat(OpenBabel_Conversion *c, o7_int_t len, o7_char fmt[/*len*/]) {
+    return c->c.SetInAndOutFormats((char *)fmt, (char *)fmt);
+}
+
+O7_ALWAYS_INLINE o7_bool 
+OpenBabel_Read(OpenBabel_Mol *m, OpenBabel_Conversion *c, OpenBabel_Ifstream in) {
+    return c->c.Read(&amp;m->m, (std::ifstream *)in);
+}
+
+O7_ALWAYS_INLINE OpenBabel_Atom OpenBabel_GetAtom(OpenBabel_Mol *m, o7_int_t idx) {
+    return (OpenBabel_Atom)m->m.GetAtom(idx);
+}
+
+O7_ALWAYS_INLINE void OpenBabel_GetVector(OpenBabel_Atom a, o7_int_t len, double out[/*len*/]) {
+    O7_ASSERT(len >= 3);
+    OpenBabel::vector3 v;
+    v = a->a.GetVector();
+    v.Get(out);
+}
+
+O7_ALWAYS_INLINE void OpenBabel_init(void) {}
+#endif
+</pre>
+
+
+ <p> Для тестирования привязки был написан модуль Mol.mod для выполнения задачи в иходной постановке: </p>
+<pre class="notranslate">MODULE Mol;
+
+  IMPORT Out, Ob := OpenBabel;
+
+  PROCEDURE Read*(VAR m: Ob.Mol; name: ARRAY OF CHAR);
+  VAR conv: Ob.Conversion; in: Ob.Ifstream; ok: BOOLEAN;
+  BEGIN
+    IF Ob.SetInFormat(conv, "xyz") THEN
+      in := Ob.Open(name);
+      ok := Ob.Read(m, conv, in);
+      Ob.Close(in)
+    END
+  END Read;
+
+  PROCEDURE OutAtom(a: Ob.Atom);
+  VAR r: ARRAY 3 OF REAL; i: INTEGER;
+  BEGIN
+    Ob.GetVector(a, r);
+    FOR i := 0 TO LEN(r) - 1 DO
+      Out.Real(r[i], 0); Out.String(" ")
+    END
+  END OutAtom;
+
+  PROCEDURE Log*(n: ARRAY OF CHAR);
+  VAR mol: Ob.Mol; atom: Ob.Atom; i: INTEGER;
+  BEGIN
+    Read(mol, n);
+    i := 1;
+    Out.String("Molecule: "); Out.Ln;
+    atom := Ob.GetAtom(mol, i);
+    WHILE atom # NIL DO
+      Out.Int(i, 0); Out.String(") "); OutAtom(atom); Out.Ln;
+      INC(i);
+      atom := Ob.GetAtom(mol, i)
+    END
+  END Log;
+
+END Mol.</pre>
+
+ <p> Такой модуль можно было бы, к примеру, запустить командой: </p>
+     <pre class="notranslate" translate="no">$ ost run 'Mol.Log("water.xyz")' -infr openbabel -m . \
+-cc "g++ -xc++ -I/usr/include/openbabel-2.0 -lopenbabel"</pre>
+     <details><summary>water.xyz</summary>
+<pre>3
+
+O         -0.00000       -0.35107       -0.00000
+H         -0.81100        0.17553        0.00000
+H          0.81100        0.17553        0.0000</pre>
+     </details>
+     <p>Но здесь проявилась особенность компилятора g++ - опция компоновщика -lopenbabel игнорируется, если 
+     указана до имён файлов с исходным кодом. Для возможности разделения опций компилятора Си необходимо 
+     доработать транслятор ost. Пока же нужно отдельно транслировать код на Обероне в Си, затем запускать
+     компилятор C++, после чего можно запускать выходной файл.
+ </p>
+ <p> Вторая проблема проявилась из-за особенности C++ - неявного вызова конструкторов локальных переменных
+     структурного типа в месте их объявления.
+     Транслятор ost по умолчанию генерирует очистку локальных переменных после их объявления, приводя их 
+     в негодность. Поэтому нужно добавлять к команде трансляции в Си ключ <code>-init noinit</code>.
+     Это тоже предмет будущей доработки транслятора.
+ </p>
+ 
+ <p> <b>Обновление</b>: обе проблемы были решены и программу можно запустить с помощью команды: </p>
+  <pre class="notranslate" translate="no">$ ost run 'Mol.Log("water.xyz")' -infr openbabel -m . \
+-cc "g++ -xc++ -I/usr/include/openbabel-2.0" ... "-lopenbabel"</pre>
+  Здесь опция "-lopenbabel" отделена от основной команды троеточием и добавляется к команде компилятора 
+  после указания исходный кодов на C, что позволяет успешно скомпоновать программу.
+ 
+</div>
+
+</body>
+</html>

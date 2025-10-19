@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Связка с другими</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Связка с кодом на других высокоуровневых языках</h2>
+<p>
+  Для использования кода на тех языках, которые транслятор использует в качестве выходных, необходим
+  механизм привязки. Во многих встречавшихся мне трансляторах для этого используют расширения
+  входного языка, позволяющих указать на принадлежность к другому языку, включая возможности вставки кода на 
+  этом языке. Это, отчасти, превращает транслятор в эдакий продвинутый препроцессор выходного языка.
+</p>
+<p>
+  В трансляторе "Востока" сейчас применён более простой модульный подход.
+  Входной язык не содержит никаких расширений, 
+  а для связывания используется подмена кода на входном языке на код на выходном языке. То есть, интерфейсный
+  модуль на Обероне с, возможно, пустыми типами и процедурами во время полной трансляции заменяется 
+  соответствующим файлом-"модулем" на С, Java или JavaScript, заполненным нужным функционалом.
+</p>
+
+<!--more-->
+
+<style>
+  pre, code { background-color: #EBEBEB; overflow: auto; color: black;}
+  td {padding: 5px;}
+  code i {color:grey;}
+  b.err {color:brown;}
+  b.inperr {color:green;}
+  b.runerr {color:darkred;}
+  pre a {float:right;}
+</style>
+  
+<p>
+  Этот способ связки имеет важные преимущества:</p>
+  <ol>
+    <li> Отсутствует рваный стиль исходного модуля, сшитого из разнородных языков - каждый файл написан на одном
+         языке. Нет необходимости представлять, как входной язык должен отображаться на выходные языки
+    <li> Выходные языки можно использовать по полной программе, лишь соблюдая возможность корректного связывания.
+         Нет необходимости втискиваться в рамки предоставленного расширениями транслятора, но требуется
+         соблюдать осторожность
+    <li> Заставляет программиста тщательней разделять связочные модули и основную логику, улучшая архитектуру.
+         Расширенный же язык позволяет втискивать обращение к выходному языку куда угодно, размазывая внешние
+         зависимости по программе
+    <li> Программа можеть быть собрана любым совместимым транслятором входного языка, ничего не знающим о
+         несовместимых расширениях. Хотя, конечно, не любая такая программа может быть исполнена корректно
+         без доработки
+  </ol>
+  Недостатки тоже есть:
+  <ol>
+    <li> Может потребоваться писать больше кода на выходном языке
+    <li> Несколько мест для изменений одной сущности
+    <li> Сложней вносить изменения, соблюдая целостность, 
+         в связку существующего модуля на входном языке и сопроводительные файлы на выходных, чем в единый 
+         модуль, написанном на расширении входного языка
+  </ol>
+
+<p>
+  Создание связки может выглядеть так:</p>
+  <ol>
+    <li> Создание интерфейсного модуля на Обероне, например, Print.mod:
+    <pre>MODULE Print;
+ PROCEDURE Do*(str: ARRAY OF CHAR);
+ BEGIN
+   ASSERT(FALSE)
+ END Do; 
+END Print.</pre>
+    <li> Трансляция модуля, лежащего в текущем каталоге, в код на Си сюда же:
+<pre>ost to-c Print . -m .</pre>
+         На выходе получаем Print.h:
+<pre>#if !defined HEADER_GUARD_Print
+#    define  HEADER_GUARD_Print 1
+
+extern void Print_Do(o7_int_t str_len0, o7_char str[/*len0*/]);
+
+O7_INLINE void Print_init(void) { ; }
+#endif</pre>
+и Print.c:
+<pre>#include &lt;o7.h&gt;
+#include "Print.h"
+
+extern void Print_Do(o7_int_t str_len0, o7_char str[/*len0*/]) {
+ O7_ASSERT((0 > 1));
+}
+</pre>
+    <li> Дополнение Си-файла нужными объявлениями и действиями:
+<pre>#include &lt;o7.h&gt;
+#include "Print.h"
+
+#include &lt;stdio.h&gt;
+
+extern void Print_Do(o7_int_t str_len0, o7_char str[/*len0*/]) {
+ printf("%s\n", str);
+}</pre>
+    <li> Запуск привязки. Указываем, что интерфейсный модуль (-i) и соответствующие файлы на Си (-c) лежат в
+         текущем каталоге:
+<pre>ost run 'Print.Do("Проба микрофона")' -i . -c .</pre>
+    <li> Можно поместить файлы привязки в общий каталог print
+<pre>mkdir -p print/singularity/definition print/singularity/implementation
+mv Print.mod print/singularity/definition/ && mv Print.[hc] print/singularity/implementation/
+ost run 'Print.Do("Или так")' -infr print </pre>
+  </ol>
+
+
+<p> Аналогичным образом пишутся привязки для Java:</p>
+  <pre>mkdir -p print/singularity/implementation.java
+ost to-java Print print/singularity/implementation.java/ -m print/singularity/definition
+editor print/singularity/implementation.java/Print.java 
+ost run-java 'Print.Do("Запуск через Java")' -infr print
+</pre>
+и для JavaScript:
+  <pre>mkdir -p print/singularity/implementation.js
+ost to-js Print print/singularity/implementation.js/ -m print/singularity/definition
+editor print/singularity/implementation.js/Print.js
+ost run-js 'Print.Do("Запуск через JavaScript")' -infr print
+</pre>
+
+</body>
+</html>
