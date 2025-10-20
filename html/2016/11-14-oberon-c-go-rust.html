@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Скорость сортировки</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Скорость пузырьковой сортировки на Oberon, C++, Go, Rust</h2>
+<style>
+  td,th { background-color: #EEE; }
+  div.block { overflow: auto; }
+</style>
+
+<div class='block'>
+<div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiWS_WjFYj2j3y-nOlC1g9ppvT6Ry6TyzSXQZTmct4xg7rZglAuWIUvBj3fvyYYHka5jaj79AioTHPWp3GFWsTJpiwxsZNrNnYA5mLQ0_4b9csyhLrX4JKdiCoiP-zUk1TJw5Fda0v_jb7lAFjADh2s5d3CXZ70hIkeSfYNc3tc13mZJUvPnfg_IcCWMAs/s1024/DALL%C2%B7E%202023-11-27%2021.34.07%20-%20A%20whimsical%20illustration%20of%20turtles%20competing%20in%20a%20foot%20race.%20The%20scene%20depicts%20a%20clear,%20sunny%20day%20with%20a%20wide,%20dirt%20racetrack.%20Multiple%20turtles,%20each.png" style="display: block; padding: 0 1em; text-align: center; clear: right; float: right;"><img alt="" border="0" width="200" data-original-height="1024" data-original-width="1024" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiWS_WjFYj2j3y-nOlC1g9ppvT6Ry6TyzSXQZTmct4xg7rZglAuWIUvBj3fvyYYHka5jaj79AioTHPWp3GFWsTJpiwxsZNrNnYA5mLQ0_4b9csyhLrX4JKdiCoiP-zUk1TJw5Fda0v_jb7lAFjADh2s5d3CXZ70hIkeSfYNc3tc13mZJUvPnfg_IcCWMAs/s200/DALL%C2%B7E%202023-11-27%2021.34.07%20-%20A%20whimsical%20illustration%20of%20turtles%20competing%20in%20a%20foot%20race.%20The%20scene%20depicts%20a%20clear,%20sunny%20day%20with%20a%20wide,%20dirt%20racetrack.%20Multiple%20turtles,%20each.png"/></a></div>
+
+<p>Воспользовавшись тестом на производительность с форума 
+ <a href="http://oberspace.org/index.php/topic,685.0.html">oberspace</a>, 
+ реализованного для разных языков, проверил свой 
+ <a href="http://vostok-space.blogspot.com/2016/10/vostok.html">транслятор</a>. 
+ Тест представляет собой написанную в лоб пузырьковую сортировку.
+</p> 
+<p>Одним из преимуществ использования транслятора Оберона перед непосредственным написанием кода на C/C++ является лёгкая возможность добавления проверок границ массива и использования неинициализированных переменных. Современные компиляторы Си тоже не так просты и позволяют добавлять некоторые проверки (-fsanitize), впрочем, рассматриваемые авторами больше как отладочная возможность. Сравним эти возможности.
+</p>
+  
+</div>
+
+<!--more-->
+
+<table>
+  <caption>Время работы с проверками границ массива</caption>
+  <tr><td>Язык:<td>С++ vector.at<td>С++ vector[]<td>Go<td>Oberon<td>Rust</tr><tr><td>Опции компилятора:<td>clang++ -O3<td>-O3 -fsanitize=address<td>go build<td>ost | clang -O3<td>rustc -O -C lto</tr><tr><td>Время сек.:<td>1.41<td>1.08<td>1.84<td>0.54<td>0.52</tr></table> <p>Транслятор Оберона вставляет проверки с помощью стандартного для Си assert, поэтому для их отключения достаточно объявить макрос NDEBUG при компиляции.</p> 
+
+<table><caption>Время работы без проверок границ массива</caption><tr><td>Язык:<td>С++ vector[]<td>Oberon<td>Rust</tr><tr><td>Опции компилятора:<td>clang++ -O3<td>ost | clang -DNDEBUG -O3<td>rustc -opt-level=3 -C lto</tr><tr><td>Время сек.:<td>0.53<td>0.47<td>0.52</tr>
+</table> 
+
+<p>Результаты забавные — с проверками границ программа на Обероне оказалась в 2-а раза быстрей С++ и лишь слегка уступила самому быстрому варианту на Rust, и оказалась самой быстрой для сортировки без проверок границ. С учётом того, что здесь Оберон транслируется в Си, то это, по сути, победа Си. С той поправкой, что написание защищённой программы сразу на Си потребует от программиста бо́льших усилий за счёт явного прописывания  проверок и неизбежного допущения какого-то количества дополнительных ошибок при этом процессе.
+</p> 
+
+<table>
+  <caption>Тестовая среда</caption>
+  <tr><td>OS:<td>GNU/Linux Ubuntu 16.04</tr><tr><td>CPU:<td>Intel i3-4160 3.60GHz</tr><tr><td>clang:<td>3.5</tr><tr><td>go:<td>1.6.2</tr><tr><td>rustc:<td>1.7.0</tr></table>
+
+</body>
+</html>

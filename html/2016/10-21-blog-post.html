@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Проект Восток</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+<body><h2>Проект Восток. Поехали</h2>
+<div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjLZNTpuuIk7cWsPMj_DYsyzCskwe-rdzK9LywBw7D7v-GU_1K89zUbwewKAGb7ZbWHY_hvMxxMzWwksyo2c8oT4_fQPfPYxBdnfvKQHsDQvxN1iQjIalfGn3N1gPU2sf-Cd1NExP5PRNHXUyAhzWi44TYiuzjyZLAMryTgmQnLMUudHCcSHP9OTt-r6Dw/s1024/DALL%C2%B7E%202023-11-16%2001.06.12%20-%20A%20detailed%20depiction%20of%20the%20%27Vostok-1%27%20rocket%20during%20liftoff,%20as%20it%20detaches%20from%20the%20launch%20pad.%20The%20scene%20shows%20a%20powerful,%20fiery%20blast%20from%20the%20roc.png" style="display: block; padding: 0 1em; text-align: center; clear: right; float: right;"><img alt="" border="0" width="320" data-original-height="1024" data-original-width="1024" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjLZNTpuuIk7cWsPMj_DYsyzCskwe-rdzK9LywBw7D7v-GU_1K89zUbwewKAGb7ZbWHY_hvMxxMzWwksyo2c8oT4_fQPfPYxBdnfvKQHsDQvxN1iQjIalfGn3N1gPU2sf-Cd1NExP5PRNHXUyAhzWi44TYiuzjyZLAMryTgmQnLMUudHCcSHP9OTt-r6Dw/s320/DALL%C2%B7E%202023-11-16%2001.06.12%20-%20A%20detailed%20depiction%20of%20the%20%27Vostok-1%27%20rocket%20during%20liftoff,%20as%20it%20detaches%20from%20the%20launch%20pad.%20The%20scene%20shows%20a%20powerful,%20fiery%20blast%20from%20the%20roc.png"/></a></div>
+<P>Выложил на <A HREF="https://github.com/ComdivByZero/vostok">github</A> исходный код проекта "Восток", который представляет из себя транслятор Оберона. Это нулевая версия, и пока весьма нестабильная. Впрочем, транслятор может не так уж и мало - собрать сам себя, так как в лучших паскалевских традициях написан на собственном входном языке - Oberon-07.
+</P>
+
+<P>Проект задумывался для возможности партизанского программирования в тылу у противника - коммерчески востребованных языков программирования, используя его как генератор C, C++, Javascript, Java кода и других. Для этого у Oberon есть все предпосылки: язык достаточно прост, чтобы его транслятор можно было создать 1-му человеку, отсутствие навороченных абстракций и низкоуровневых возможностей на уровне ядра языка позволяет относительно легко отображать его на другие языки программирования - как низкоуровневые, так и высокоуровневые, и при этом сам язык достаточно мощен, гибок и защищён от ошибок, чтобы программирование на нём было вполне удобным. Практический смысл этого - возможность использовать один и тот же код на самых разных платформах. Ранее для такой цели я использовал C, но было сложно назвать это удобным и надёжным.
+</P>
+
+<P>Так как я задумывал транслятор с возможностью дальнейшего развития, то для него я выбрал более сложную архитектуру, чем возможно для Oberon. Трансляция проходит в два этапа - сначала разборщик исходного кода формирует синтаксическое дерево, затем по нему производится выходной код. Это отсрочило выход 0-й версии, но в дальнейшем позволит легче добавлять другие диалекты Oberon в качестве входных языков, а также другие целевые платформы.
+</P>
+
+<P>Но пока предстоит немало потрудиться над стабильностью транслятора и над качеством производимого C-кода, поэтому о других целях говорить рано.</P>
+</body>
+</html>
