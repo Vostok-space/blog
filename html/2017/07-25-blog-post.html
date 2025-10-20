@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Скриптовый режим</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Скриптовый режим</h2>
+  <ol>
+    <li>
+      <a href="https://github.com/Vostok-space/vostok/commit/73801bdfa25fa087f58743546cf9d2f9a2d2d602">19 апреля</a>
+      я добавил в транслятор возможность генерации исполняемого файла и возможность его сразу же запустить 
+    <li>
+      <a href="https://github.com/Vostok-space/vostok/commit/0d16a52da1195178675e093e6e6d1d270b3a4223">25 апреля</a>
+      добавил возможность указать команду модуля - экспортированную процедуру без параметров, что приблизило "Восток"   к более удобному понятию программы в оригинальном Обероне в противовес традиционному пониманию программы с   единой точкой входа. 
+    <li>
+      <a href="https://github.com/Vostok-space/vostok/commit/e7d083e1561923adb636e5621ffe0f906a3f55c3">5 июля</a>
+      была добавлено скриптовое исполнение, то есть, появилась возможность вызова последовательности  экспортированных из разных модулей процедур с параметрами. 
+    <li>
+      <a href="https://github.com/Vostok-space/vostok/commit/ce9aa30ad94734fb73d176854496cecedd41f0b1">24 июля</a>
+      была добавлена опция командной строки -infr (инфраструктура), позволяющая для простых случаев сократить количество параметров, нужных для запуска кода на Оберон. Можно писать так: 
+      <pre><code>$VOSTOK/result/ost run "Out.Int(1234 * 4567 + 89ABH, 0); Out.Ln" -infr $VOSTOK</code></pre>
+      Или, подготовив shell соответствующей функцией
+      <pre><code>function ost { $VOSTOK/result/ost run "$1" -infr $VOSTOK; }</code></pre>  
+      писать так: 
+      <pre><code>ost "Out.Int(1234 * 4567 + 89ABH, 0); Out.Ln"</code></pre> 
+  
+</ol>
+</body>
+</html>
