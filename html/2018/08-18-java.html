@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Java</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Трансляция в Java</h2>
+<div> 
+<div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiLO2GCgR1PWWU_YG9Pgme-dnxJuy_-XxUTzkDpSXMGHCvRDkJlzOw3QHuy2GK2LDC59aizhqnqei7ZdKdRseLvAc0weW3sOc4QmnBvvrE9cMdESCjuasi1toWTtxE8X7m8EAtfTNYenccD1XpJYS0XJqSItE618Sav65IrgCjNPi5rWv0mMr10AThC4QI/s1792/DALL%C2%B7E%202023-11-18%2020.41.17%20-%20A%20realistic%20photograph%20of%20a%20coffee%20tree%20on%20the%20island%20of%20Java,%20Indonesia,%20with%20only%20green%20coffee%20beans.%20The%20tree%20is%20surrounded%20by%20tropical%20vegetation,.png" style="display: block; padding: 1em 0; text-align: center; "><img alt="" border="0" width="600" data-original-height="1024" data-original-width="1792" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiLO2GCgR1PWWU_YG9Pgme-dnxJuy_-XxUTzkDpSXMGHCvRDkJlzOw3QHuy2GK2LDC59aizhqnqei7ZdKdRseLvAc0weW3sOc4QmnBvvrE9cMdESCjuasi1toWTtxE8X7m8EAtfTNYenccD1XpJYS0XJqSItE618Sav65IrgCjNPi5rWv0mMr10AThC4QI/s600/DALL%C2%B7E%202023-11-18%2020.41.17%20-%20A%20realistic%20photograph%20of%20a%20coffee%20tree%20on%20the%20island%20of%20Java,%20Indonesia,%20with%20only%20green%20coffee%20beans.%20The%20tree%20is%20surrounded%20by%20tropical%20vegetation,.png"/></a></div>
+  <p> Две недели назад добавил в транслятор Оберона возможность
+<a href='https://github.com/ComdivByZero/vostok/compare/644e5ca53269...0957e166f370'>генерации Java кода</a>,
+что является очередным шагом на пути по созданию многоцелевого транслятора. Работа далека от завершения — сейчас   проходят лишь простые тесты. Еще предстоит доработать генерацию для возможности полной самотрансляции.
+</p> 
+  
+<p> Модуль генерации Java был переделан из генератора C кода. Это позволило провести работу в      полуавтоматическом режиме во время почти отдыха, но привело к наличию артефактов, специфичных для Си и не     характерных для Java.     Для упрощения генерации был создан модуль 
+  <a href='https://github.com/Vostok-space/vostok/blob/0957e166f370f46a921677e7854dc6f359198a82/source/AstTransform.mod'>AstTransform</a>, 
+  преобразовывающий переменные параметры, безымянные и локальные записи, и локальные  подпрограммы в более близкий к Java Оберон-код.
+</p>
+  
+<p> Модуль Оберона отображается на класс в Java. Процедуры — статические методы. Процедурные переменные — это     экземпляры-воплощения абстрактного класса с единственным виртуальным методом. Переменные примитивных типов, участвующие как фактические параметры-переменные преобразовываются в одноэлементные массивы. Локальные и безымянные записи становятся именованными статическими внутренними классами. Для присваивания значения записей генерируются соответствующие методы. CHAR и BYTE превращаются в byte, при вычислениях с которыми производятся преобразования, нацеленные на преодоления наличия знака у Java-byte.
+</p>
+
+</div>
+</body>
+</html>

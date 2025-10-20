@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Android</title>
+
+  <link rel="stylesheet" type="text/css" href="../main.css"/>
+</head>
+
+<body><h2>Android</h2>
+<p> На днях cделал прототип
+  <a href="https://github.com/Vostok-space/vostok/commit/c8507c44769e04fa5eab1c9c335789b56d42a582">сборщика</a>
+ простых приложений Android, написанных на Oberon. Работает он только под Ubuntu 18.04, так как в этой версии есть
+   возможность установки Android SDK из стандартного репозитория, что позволяет легко ссылаться на нужные файлы без  дополнительных действий. </p> <p> Получить исполняемый файл сборщика можно из каталога транслятора командой:</p>
+  <pre> $ result/ost to-bin AndroidBuild.Go result/osa -infr . -m source </pre>
+
+ <p> При вызове </p>
+  <pre> $ result/osa install-tools </pre>
+ <p>сборщик выдаст команду, которую нужно выполнить для установки утилит, достаточных для сборки Android
+   приложений с помощью него.
+ </p>
+ <p> Apk файл для Android 2.3 можно собрать командой build:</p>
+   <pre> $ result/osa build ColorCells.Go result/cells.apk -infr . -m example/android </pre>
+
+ <p> Можно и сразу запустить
+     <a href="https://github.com/Vostok-space/vostok/blob/master/example/android/ColorCells.mod">приложение</a>
+    на телефоне:</p>
+     <pre> $ result/osa run ColorCells.Go -infr . -m example/android </pre>
+    <p>Данный пример создаёт такую картинку:</p>
+<a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjZmcU1BH11vXPYvTRzqCMKNWfpC5KrVroXms3yInv_6-0nvPFx_e1IFLDoJL8KpfDwaKcOqMixU_nUio_wTOKYXl70vjGxxOujZR4fu1-8sGGiNjIIeEgb2x2SAKxR2b3qzkUH2ew_xYd-/s1600/android-color-cells.png" imageanchor="1" ><img border="0" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjZmcU1BH11vXPYvTRzqCMKNWfpC5KrVroXms3yInv_6-0nvPFx_e1IFLDoJL8KpfDwaKcOqMixU_nUio_wTOKYXl70vjGxxOujZR4fu1-8sGGiNjIIeEgb2x2SAKxR2b3qzkUH2ew_xYd-/s400/android-color-cells.png" width="225" height="400" data-original-width="900" data-original-height="1600" /></a>
+
+
+ <p> Второй пример создаёт
+   <a href="https://github.com/Vostok-space/vostok/blob/master/example/android/Star.mod">приложение</a>,
+   рисующее звезду, количество лучей которой настраивается при сборке:</p> 
+   <pre> $ result/osa run 'Star.Go(5, 0.38)' -infr . -m example/android </pre>
+<a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhYmDKWrX2ZiK4RGNPVVypXM3G11D7TItr29yL84FTpDCns_R-N_hiXvEyG7X86dtX5nQ6SENht2FM9Dc5UNDjx1fzPR6PrCRINjMITUEPoUyMyfM1eHBQaDzxIEe5zRGILa36vmrVX64Ck/s1600/android-star.png" imageanchor="1" ><img border="0" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhYmDKWrX2ZiK4RGNPVVypXM3G11D7TItr29yL84FTpDCns_R-N_hiXvEyG7X86dtX5nQ6SENht2FM9Dc5UNDjx1fzPR6PrCRINjMITUEPoUyMyfM1eHBQaDzxIEe5zRGILa36vmrVX64Ck/s400/android-star.png" width="225" height="400" data-original-width="900" data-original-height="1600" /></a>
+
+<p>Обёртки API Андроид, предоставляющие в Обероне доступ к возможностям мобильной ОС существенно неполны, по сути,   являясь минимальными обвязками для указанных выше примеров.
+ </p>
+
+<details><summary>К звёздам!</summary>
+  <pre>$ result/osa run Rocket.Fly -infr . -m example/android</pre>
+</details>
+
+<br/><br/>
+<p>Обновление: <a href="../2021/06-14-apk-build-on-android.html">cборка на самом Android</a>.</p>
+</body>
+</html>
